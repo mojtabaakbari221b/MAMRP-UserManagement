@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using UserManagement.Domain.Entities;
 
 
 namespace UserManagement.Infrastructure.Persistence
 {
-    internal class UserManagementDbContext
+    public class UserManagementDbContext : DbContext
     {
         public DbSet<Member> Members { get; set; }
         public DbSet<Menu> Menus { get; set; }
@@ -14,5 +13,9 @@ namespace UserManagement.Infrastructure.Persistence
         public DbSet<Service> Service { get; set; }
         public DbSet<ServiceGroup> ServiceGroups { get; set; }
         public DbSet<User> Users { get; set; }
+
+        public UserManagementDbContext(DbContextOptions<UserManagementDbContext> options) : base(options)
+        {
+        }
     }
 }

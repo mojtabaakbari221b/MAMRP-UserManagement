@@ -1,7 +1,11 @@
-﻿namespace UserManagement.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+
+namespace UserManagement.Domain.Entities
 {
     public class IEntity
     {
+        [Key]
         public long Id { get; set; }
         public DateTime RecordDatetime { get; set; }
         public DateTime PersianRecordDatetime { get; set; }

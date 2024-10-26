@@ -1,6 +1,6 @@
 ﻿namespace UserManagement.Domain.Entities
 {
-    public class User
+    public class User : IEntity
     {
         public long MemberId { get; set; }
         public string UserName { get; set; }
