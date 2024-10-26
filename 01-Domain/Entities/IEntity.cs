@@ -1,6 +1,6 @@
 ﻿namespace UserManagement.Domain.Entities
 {
-    internal class IEntity
+    public class IEntity
     {
         public long Id { get; set; }
         public DateTime RecordDatetime { get; set; }

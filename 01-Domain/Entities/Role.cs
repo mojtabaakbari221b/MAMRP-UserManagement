@@ -1,6 +1,6 @@
 ﻿namespace UserManagement.Domain.Entities
 {
-    internal class Role : IEntity
+    public class Role : IEntity
     {
         public string Name { get; set; }
         public string Description { get; set; }

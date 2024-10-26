@@ -1,6 +1,6 @@
 ﻿namespace UserManagement.Domain.Entities
 {
-    internal class Service : IEntity
+    public class Service : IEntity
     {
         public string Name { get; set; }
         public string Url { get; set; }

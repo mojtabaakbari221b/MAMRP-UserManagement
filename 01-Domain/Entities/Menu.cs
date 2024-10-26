@@ -1,6 +1,6 @@
 ﻿namespace UserManagement.Domain.Entities
 {
-    internal class Menu : IEntity
+    public class Menu : IEntity
     {
         public string Name { get; set; }
         public string Url { get; set; }
