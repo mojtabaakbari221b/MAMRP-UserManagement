@@ -12,7 +12,7 @@ namespace UserManagement.Api.Controllers
     {
         [HttpGet]
         [Route("")]
-        public async Task<ActionResult<MenuDto>> ListAsync()
+        public async Task<ActionResult<MenuDto>> GetAll()
         {
             var menuId = 1;
 
@@ -20,7 +20,7 @@ namespace UserManagement.Api.Controllers
                 .RuleFor(u => u.Id, _ => menuId++)
                 .RuleFor(u => u.Name, f => f.Name.FirstName())
                 .RuleFor(u => u.Url, f => f.Internet.UrlRootedPath())
-                .RuleFor(u => u.GroupId, f => f.Random.Int())
+                .RuleFor(u => u.GroupId, f => f.Random.UInt())
                 .RuleFor(u => u.Description, f => f.Lorem.Paragraph());
 
             var menus = menuFaker.Generate(20);
@@ -30,7 +30,7 @@ namespace UserManagement.Api.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<ActionResult<MenuDto>> GetByIdAsync(int Id)
+        public async Task<ActionResult<MenuDto>> GetById(int Id)
         {
             var menuFaker = new Faker<MenuDto>("fa")
                 .RuleFor(u => u.Id, _ => Id)
@@ -46,14 +46,14 @@ namespace UserManagement.Api.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
-        public async Task<ActionResult<bool>> DeleteByIdAsync(int Id)
+        public async Task<ActionResult<bool>> Delete(int Id)
         {
             return Ok(true);
         }
 
         [HttpPut]
         [Route("{id:long}")]
-        public async Task<ActionResult<MenuDto>> UpdateByIdAsync(int Id, UpdateMenuDto request)
+        public async Task<ActionResult<MenuDto>> Update(int Id, UpdateMenuDto request)
         {
             MenuDto menuDto = new MenuDto
             {
@@ -67,7 +67,7 @@ namespace UserManagement.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<MenuDto>> CreateAsync(int Id, CreateMenuDto request) 
+        public async Task<ActionResult<MenuDto>> Create(int Id, CreateMenuDto request) 
         {
             Faker faker = new Faker();
             MenuDto menuDto = new MenuDto

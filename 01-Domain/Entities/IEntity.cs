@@ -13,6 +13,6 @@ namespace UserManagement.Domain.Entities
         public DateTime UpdateDatetime { get; set; }
         public DateTime PersianUpdateDatetime { get; set; }
         public int UpdaterUser { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool IsActive { get; set; }
     }
 }

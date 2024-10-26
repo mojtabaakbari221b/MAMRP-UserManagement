@@ -1,7 +1,11 @@
-﻿namespace UserManagement.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace UserManagement.Domain.Entities
 {
     public class Menu : IEntity
     {
+        [Required]
+        
         public string Name { get; set; }
         public string Url { get; set; }
         public long GroupId { get; set; }
