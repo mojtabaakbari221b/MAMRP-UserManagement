@@ -1,9 +1,8 @@
-﻿using Bogus;
-using MediatR;
+﻿using MediatR;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using UserManagement.Application.Commands.Handlers;
-using UserManagement.Application.Dtos;
 using UserManagement.Application.Dtos.MenuDtos;
+using UserManagement.Application.Queries.Handlers;
 
 namespace UserManagement.Api.Controllers;
 
@@ -21,63 +20,43 @@ public class MenuController : ControllerBase
 
     [HttpGet]
     [Route("")]
-    public async Task<ActionResult<MenuDto>> GetAll()
+    public ActionResult<IList<MenuDto>> GetAll([FromQuery] GetAllMenuQuery command)
     {
-        // var menus = _mediator.Send(ListMenuCommand)
-        var menuId = 1;
+        var menus = _mediator.Send(command);
+        var menuDtos = menus.Result.Adapt<IList<MenuDto>>();
 
-        var menuFaker = new Faker<MenuDto>("fa")
-            .RuleFor(u => u.Id, _ => menuId++)
-            .RuleFor(u => u.Name, f => f.Name.FirstName())
-            .RuleFor(u => u.Url, f => f.Internet.UrlRootedPath())
-            .RuleFor(u => u.GroupId, f => f.Random.UInt())
-            .RuleFor(u => u.Description, f => f.Lorem.Paragraph());
-
-        var menus = menuFaker.Generate(20);
-
-        return Ok(menus);
+        return Ok(menuDtos);
     }
 
     [HttpGet]
     [Route("{id:int}")]
-    public async Task<ActionResult<MenuDto>> GetById(int Id)
+    public async Task<ActionResult<MenuDto>> GetById([FromRoute] GetMenuByIdQuery command)
     {
-        var menuFaker = new Faker<MenuDto>("fa")
-            .RuleFor(u => u.Id, _ => Id)
-            .RuleFor(u => u.Name, f => f.Name.FirstName())
-            .RuleFor(u => u.Url, f => f.Internet.UrlRootedPath())
-            .RuleFor(u => u.GroupId, f => f.Random.Int())
-            .RuleFor(u => u.Description, f => f.Lorem.Paragraph());
+        var menu = _mediator.Send(command);
+        var menuDto = menu.Result.Adapt<MenuDto>();
 
-        var menus = menuFaker.Generate();
-
-        return Ok(menus);
+        return Ok(menuDto);
     }
 
     [HttpDelete]
     [Route("{id:int}")]
-    public async Task<ActionResult<bool>> Delete(int Id)
+    public async Task<ActionResult<bool>> Delete([FromRoute] DeleteMenuCommand command)
     {
+        var menu = _mediator.Send(command);
         return Ok(true);
     }
 
     [HttpPut]
     [Route("{id:long}")]
-    public async Task<ActionResult<MenuDto>> Update(int Id, UpdateMenuDto request)
+    public async Task<ActionResult<bool>> Update(long Id, [FromBody] UpdateMenuCommand command)
     {
-        MenuDto menuDto = new MenuDto
-        {
-            Id = Id,
-            Name = request.Name,
-            Url = request.Url,
-            Description = request.Description,
-            GroupId = request.GroupId,
-        };
-        return Ok(menuDto);
+        command.Id = Id;
+        await _mediator.Send(command);
+        return Ok(true);
     }
 
     [HttpPost]
-    public async Task<ActionResult<MenuDto>> Create(AddMenuCommand command) 
+    public async Task<ActionResult<MenuDto>> Create([FromBody] AddMenuCommand command) 
     {
         await _mediator.Send(command);
         return Ok();

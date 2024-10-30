@@ -2,7 +2,9 @@ using System.Reflection;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using UserManagement.Api.Controllers;
-using UserManagement.Application.Commands.Handlers;
+//using UserManagement.Application.Commands.Handlers;
+using UserManagement.Application.Queries;
+using UserManagement.Application.Queries.Handlers;
 using UserManagement.Infrastructure.Persistence;
 using UserManagement.Infrastructure.Repositories;
 
@@ -25,6 +27,10 @@ builder.Services.AddDbContext<UserManagementDbContext>(options =>
 );
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AddMenuCommandHandler).Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetAllMenuQueryHandler).Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetMenuByIdQueryHandler).Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DeleteMenuCommandHandler).Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(UpdateMenuCommandHandler).Assembly));
 
 builder.Services.AddTransient<IMenuRepository, MenuRepository>();
 

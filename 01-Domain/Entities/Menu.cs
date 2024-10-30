@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace UserManagement.Domain.Entities
+﻿namespace UserManagement.Domain.Entities
 {
     public class Menu : IEntity
     {      

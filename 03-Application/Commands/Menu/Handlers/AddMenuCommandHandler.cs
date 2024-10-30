@@ -2,7 +2,6 @@ using MediatR;
 using UserManagement.Domain.Entities;
 using UserManagement.Infrastructure.Repositories;
 
-namespace UserManagement.Application.Commands.Handlers;
 
 public class AddMenuCommandHandler(IMenuRepository _repository) : IRequestHandler<AddMenuCommand, int>
 {
