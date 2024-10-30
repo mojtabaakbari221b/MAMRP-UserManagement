@@ -1,5 +1,10 @@
+using System.Reflection;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using UserManagement.Api.Controllers;
+using UserManagement.Application.Commands.Handlers;
 using UserManagement.Infrastructure.Persistence;
+using UserManagement.Infrastructure.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,11 +18,15 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddDbContext<UserManagementDbContext>(options =>
-    options.UseSqlServer(
+    options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly("04-Api")
     )
 );
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AddMenuCommandHandler).Assembly));
+
+builder.Services.AddTransient<IMenuRepository, MenuRepository>();
 
 var app = builder.Build();
 
