@@ -3,8 +3,6 @@ using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using UserManagement.Application.Dtos.MenuDtos;
 using UserManagement.Application.Queries.Handlers;
-using FluentValidation;
-using Azure.Core;
 
 namespace UserManagement.Api.Controllers;
 
