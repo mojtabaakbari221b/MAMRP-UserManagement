@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddDbContext<UserManagementDbContext>(options =>
-    options.UseNpgsql(
+    options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly("04-Api")
     )
