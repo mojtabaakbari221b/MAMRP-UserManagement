@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using FluentValidation;
+using FluentResults;
+using FluentValidation.Results;
 
 internal sealed class ExceptionHandlingMiddleware : IMiddleware
 {
@@ -20,24 +22,22 @@ internal sealed class ExceptionHandlingMiddleware : IMiddleware
     private static async Task HandleExceptionAsync(HttpContext httpContext, ValidationException exception)
     {
 
-        var response = new ProblemDetails
-        {
-            Status = StatusCodes.Status400BadRequest,
-            Type = "ValidationFailure",
-            Title = "Validation error",
-            Detail = "One or more validation errors has occurred"
-        };
+        //Result result = new Result();
 
         if (exception.Errors is not null)
         {
-            response.Extensions["errors"] = exception.Errors;
+            //Error error = new Error();
+            var result = Result.Ok(exception.Errors);
+            //response.Extensions["errors"] = exception.Errors;
+            //await httpContext.Response.WriteAsync(JsonSerializer.Serialize(result));
+            await httpContext.Response.WriteAsync(JsonSerializer.Serialize(result));
         }
 
-        httpContext.Response.ContentType = "application/json";
+        //httpContext.Response.ContentType = "application/json";
 
-        httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+        //httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
-        await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
+        //await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
     }
 
 }

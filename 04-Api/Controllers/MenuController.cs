@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using FluentResults;
-using UserManagement.Application.Dtos.MenuDtos;
-using UserManagement.Application.Queries.Handlers;
+using UserManagement.Application.Dtos.SectionDtos;
+using UserManagement.Application.Queries.Sections;
 
 namespace UserManagement.Api.Controllers;
 
@@ -19,31 +19,27 @@ public class MenuController : ControllerBase
     }
 
     [HttpGet]
-    [Route("")]
     public async Task<Result<IList<MenuDto>>> GetAll([FromQuery] GetAllMenuQuery command)
     {
-        var menuDtos = await _mediator.Send(command);
-        return Result.Ok(menuDtos);
+        var SectionDtos = await _mediator.Send(command);
+        return Result.Ok(SectionDtos);
     }
 
-    [HttpGet]
-    [Route("{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<Result<MenuDto>> GetById([FromRoute] GetMenuByIdQuery command)
     {
         var menuDto = await _mediator.Send(command);
         return Result.Ok(menuDto);
     }
 
-    [HttpDelete]
-    [Route("{id:int}")]
+    [HttpDelete("{id:int}")]
     public async Task<Result<bool>> Delete([FromRoute] DeleteMenuCommand command)
     {
         var menu = _mediator.Send(command);
         return Result.Ok(true);
     }
 
-    [HttpPut]
-    [Route("{id:long}")]
+    [HttpPut("{id:long}")]
     public async Task<Result<bool>> Update(long Id, [FromBody] UpdateMenuCommand command)
     {
         command.Id = Id;
@@ -52,10 +48,10 @@ public class MenuController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<MenuDto>> Create([FromBody] AddMenuCommand command) 
+    public async Task<Result<MenuDto>> Create([FromBody] AddMenuCommand command) 
     {
-        await _mediator.Send(command);
-        return Ok();
+        var menuDto = await _mediator.Send(command);
+        return Result.Ok(menuDto);
     }
 }
 

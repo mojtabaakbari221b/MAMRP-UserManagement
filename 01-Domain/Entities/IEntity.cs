@@ -3,7 +3,7 @@
 
 namespace UserManagement.Domain.Entities
 {
-    public class IEntity
+    public abstract class IEntity
     {
         [Key]
         public long Id { get; set; }

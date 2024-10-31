@@ -7,7 +7,7 @@ public static class Extensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddTransient<IMenuRepository, MenuRepository>();
+        services.AddTransient<ISectionRepository, SectionRepository>();
         return services;
     }
 }

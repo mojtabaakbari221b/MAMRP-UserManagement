@@ -1,9 +1,11 @@
 using FluentValidation;
 using MediatR;
-using UserManagement.Domain.Entities;
+using UserManagement.Application.Dtos.SectionDtos;
 
+namespace UserManagement.Application.Commands.Sections;
 
-public class AddMenuCommand() : IRequest<int> {
+public class AddMenuCommand : IRequest<SectionDto>
+{
     public long GroupId { get; set; }
     public string Name { get; set; }
     public string Url { get; set; }
