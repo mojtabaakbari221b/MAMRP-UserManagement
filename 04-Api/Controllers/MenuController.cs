@@ -1,6 +1,7 @@
-﻿using MediatR;
+﻿using Microsoft.AspNetCore.Mvc;
+using MediatR;
 using Mapster;
-using Microsoft.AspNetCore.Mvc;
+using FluentResults;
 using UserManagement.Application.Dtos.MenuDtos;
 using UserManagement.Application.Queries.Handlers;
 
@@ -20,22 +21,20 @@ public class MenuController : ControllerBase
 
     [HttpGet]
     [Route("")]
-    public ActionResult<IList<MenuDto>> GetAll([FromQuery] GetAllMenuQuery command)
+    public async Task<Result<IList<MenuDto>>> GetAll([FromQuery] GetAllMenuQuery command)
     {
-        var menus = _mediator.Send(command);
-        var menuDtos = menus.Result.Adapt<IList<MenuDto>>();
-
-        return Ok(menuDtos);
+        var menus = await _mediator.Send(command);
+        var menuDtos = menus.Adapt<IList<MenuDto>>();
+        return Result.Ok(menuDtos);
     }
 
     [HttpGet]
     [Route("{id:int}")]
-    public async Task<ActionResult<MenuDto>> GetById([FromRoute] GetMenuByIdQuery command)
+    public async Task<Result<MenuDto>> GetById([FromRoute] GetMenuByIdQuery command)
     {
-        var menu = _mediator.Send(command);
-        var menuDto = menu.Result.Adapt<MenuDto>();
-
-        return Ok(menuDto);
+        var menu = await _mediator.Send(command);
+        var menuDto = menu.Adapt<MenuDto>();
+        return Result.Ok(menuDto);
     }
 
     [HttpDelete]
