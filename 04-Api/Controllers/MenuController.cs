@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Mapster;
 using FluentResults;
 using UserManagement.Application.Dtos.MenuDtos;
 using UserManagement.Application.Queries.Handlers;
@@ -23,8 +22,7 @@ public class MenuController : ControllerBase
     [Route("")]
     public async Task<Result<IList<MenuDto>>> GetAll([FromQuery] GetAllMenuQuery command)
     {
-        var menus = await _mediator.Send(command);
-        var menuDtos = menus.Adapt<IList<MenuDto>>();
+        var menuDtos = await _mediator.Send(command);
         return Result.Ok(menuDtos);
     }
 
@@ -32,26 +30,25 @@ public class MenuController : ControllerBase
     [Route("{id:int}")]
     public async Task<Result<MenuDto>> GetById([FromRoute] GetMenuByIdQuery command)
     {
-        var menu = await _mediator.Send(command);
-        var menuDto = menu.Adapt<MenuDto>();
+        var menuDto = await _mediator.Send(command);
         return Result.Ok(menuDto);
     }
 
     [HttpDelete]
     [Route("{id:int}")]
-    public async Task<ActionResult<bool>> Delete([FromRoute] DeleteMenuCommand command)
+    public async Task<Result<bool>> Delete([FromRoute] DeleteMenuCommand command)
     {
         var menu = _mediator.Send(command);
-        return Ok(true);
+        return Result.Ok(true);
     }
 
     [HttpPut]
     [Route("{id:long}")]
-    public async Task<ActionResult<bool>> Update(long Id, [FromBody] UpdateMenuCommand command)
+    public async Task<Result<bool>> Update(long Id, [FromBody] UpdateMenuCommand command)
     {
         command.Id = Id;
         await _mediator.Send(command);
-        return Ok(true);
+        return Result.Ok(true);
     }
 
     [HttpPost]

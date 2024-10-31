@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using UserManagement.Domain.Entities;
+using UserManagement.Application.Dtos.MenuDtos;
 
 
-public class GetAllMenuQuery : IRequest<IList<Menu>> { }
+public class GetAllMenuQuery : IRequest<IList<MenuDto>> { }
 

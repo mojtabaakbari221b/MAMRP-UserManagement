@@ -18,7 +18,7 @@ public class MenuRepository : IMenuRepository
         }
     }
 
-    public void Delete(Menu menu)
+    public async void Delete(Menu menu)
     {
         var connectionString = "Server=localhost,1433;Database=mamrp_user_management;User Id=sa; Password=123456;Encrypt=True;TrustServerCertificate=True;";
         using (var connection = new SqlConnection(connectionString))
