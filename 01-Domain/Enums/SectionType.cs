@@ -1,8 +1,9 @@
-﻿namespace UserManagement.Domain.Enums
+﻿namespace UserManagement.Domain.Enums;
+
+public enum SectionType 
 {
-    public enum SectionType
-    {
-        Service = 0,
-        Menu = 1,
-    }
+    Service = 0,
+    Menu = 1,
 }
+
+

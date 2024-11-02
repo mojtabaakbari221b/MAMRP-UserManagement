@@ -1,6 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using UserManagement.Infrastructure.Persistence;
-
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
@@ -16,8 +13,7 @@ services.AddInfrastructure(configuration);
 
 services.AddDbContext<UserManagementDbContext>(options =>
     options.UseSqlServer(
-        configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly("04-Api")
+        configuration.GetConnectionString("DefaultConnection")
     )
 );
 

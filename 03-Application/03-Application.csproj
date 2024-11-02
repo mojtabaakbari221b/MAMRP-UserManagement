@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\02-Infrastructure\02-Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
 	<PackageReference Include="FluentResults" Version="3.16.0" />
 	<PackageReference Include="Mapster" Version="7.4.0" />
@@ -19,6 +15,10 @@
 	<PackageReference Include="FluentValidation" Version="11.10.0" />
 	<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 	<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\01-Domain\01-Domain.csproj" />
   </ItemGroup>
 
 </Project>

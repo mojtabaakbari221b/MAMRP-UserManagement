@@ -1,10 +1,5 @@
-﻿namespace UserManagement.Application.Dtos.SectionDtos;
+﻿using UserManagement.Domain.Common;
 
-public class SectionDto
-{
-    public long Id { get; set; }
-    public string Name { get; set; }
-    public string Url { get; set; }
-    public long GroupId { get; set; }
-    public string Description { get; set; }
-}
+namespace UserManagement.Application.Dtos.SectionDtos;
+
+public sealed record SectionDto(long Id, string Name, string Url, long GroupId, string Description) : IResponse;
