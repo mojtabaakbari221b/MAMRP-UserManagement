@@ -1,0 +1,11 @@
+﻿global using UserManagement.Infrastructure.Persistence.Repositories;
+global using UserManagement.Infrastructure.Persistence.UnitOfWork;
+global using UserManagement.Infrastructure.Persistence.Identity;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+global using UserManagement.Infrastructure.Persistence.Context;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Configuration;
+global using UserManagement.Domain.Repositories;
+global using UserManagement.Domain.UnitOfWork;
+global using UserManagement.Domain.Entities;
+global using Microsoft.EntityFrameworkCore;
