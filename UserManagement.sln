@@ -7,13 +7,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9B4C9C2F-9E1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Share", "src\Share\Share.csproj", "{802951C8-6147-4515-9C52-A33F79821499}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "01-Domain", "src\01-Domain\01-Domain.csproj", "{8094920A-1ED2-4C14-8EE1-08DAC2EDC17F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{8094920A-1ED2-4C14-8EE1-08DAC2EDC17F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "02-Infrastructure", "src\02-Infrastructure\02-Infrastructure.csproj", "{0451377D-D26A-4EEB-B347-535EAE08B5A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{0451377D-D26A-4EEB-B347-535EAE08B5A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "03-Application", "src\03-Application\03-Application.csproj", "{FBAE940A-C5E7-4997-9F6A-79E606BE7D77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{FBAE940A-C5E7-4997-9F6A-79E606BE7D77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "04-Api", "src\04-Api\04-Api.csproj", "{D70E7099-0B7C-4925-BDF6-560BDBB43470}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\Api\Api.csproj", "{D70E7099-0B7C-4925-BDF6-560BDBB43470}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

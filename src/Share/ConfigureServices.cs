@@ -8,17 +8,13 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddShared(this IServiceCollection services)
     {
-        services.AddScoped<MamrpBaseBadRequestExceptionMiddleware>();
-        services.AddScoped<MamrpBaseNotFoundExceptionMiddleware>();
-        services.AddScoped<MamrpValidationExceptionMiddleware>();
+        services.AddScoped<MamrpExceptionHandlingMiddleware>(); ;
         return services;
     }
 
     public static IApplicationBuilder UseExceptionHandling(this IApplicationBuilder app)
     {
-        app.UseMiddleware<MamrpBaseBadRequestExceptionMiddleware>();
-        app.UseMiddleware<MamrpBaseNotFoundExceptionMiddleware>();
-        app.UseMiddleware<MamrpValidationExceptionMiddleware>();
+        app.UseMiddleware<MamrpExceptionHandlingMiddleware>();
         return app;
     }
 }
