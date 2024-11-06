@@ -1,8 +1,8 @@
 namespace UserManagement.Application.ApplicationServices.UserRole.Commands.ChangeRoleOfUser;
 
-public class ChangeRoleOfUserRequestHandler(IAcountManager acountManager) : IRequestHandler<ChangeRoleOfUserRequest>
+public class ChangeRoleOfUserRequestHandler(IAccountManager acountManager) : IRequestHandler<ChangeRoleOfUserRequest>
 {   
-    private readonly IAcountManager _acountManager = acountManager;
+    private readonly IAccountManager _acountManager = acountManager;
     public async Task Handle(ChangeRoleOfUserRequest request, CancellationToken cancellationToken)
     {
         var userDto = await _acountManager.GetUserById(request.userId);
