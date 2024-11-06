@@ -1,4 +1,6 @@
-﻿namespace UserManagement.Api.Controllers.Account;
+﻿using UserManagement.Application.ApplicationServices.UserRole.Commands.ChangeRoleOfUser;
+
+namespace UserManagement.Api.Controllers.Account;
 
 
 [ApiController]
@@ -21,5 +23,11 @@ public sealed class AccountController(ISender sender) : ControllerBase
     {
         var result = await _sender.Send(request, token);
         return Result.Ok(result);
+    }
+
+    [HttpPost("change-user-role")]
+    public async Task<Result> ChangeUserRole(ChangeRoleOfUserRequest request) {
+        await _sender.Send(request);
+        return Result.Ok();
     }
 }

@@ -1,9 +1,11 @@
-﻿using UserManagement.Application.ExternalServices.Identities.DTOs;
-
-namespace UserManagement.Application.ExternalServices.Identities;
+﻿namespace UserManagement.Application.ExternalServices.Identities;
 
 public interface IAccountManager
 {
     Task<LoginResult> Login(string username, string password);
     Task Register(RegisterDto registerDto);
+    Task RemoveUserRolesAndUserClaimsAsync(Guid userID);
+    Task<UserDto> GetUserById(string id);
+    Task<RoleDto> GetRoleById(string id);
+    Task AddRoleAndTheirClaimsToUserAsync(UserDto userDto, RoleDto roleDto);
 }
