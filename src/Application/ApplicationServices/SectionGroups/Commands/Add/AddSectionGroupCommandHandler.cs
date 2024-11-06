@@ -8,8 +8,8 @@ public sealed class AddSectionGroupCommandHandler(IUnitOfWork uow)
     public async Task<SectionGroupDto> Handle(AddSectionGroupCommandRequest request, CancellationToken token)
     {
         var newSectionGroup = request.Adapt<SectionGroup>();
-        var sectionGroup = await _uow.SectionGroups.AddAsync(newSectionGroup, token);
+        await _uow.SectionGroups.AddAsync(newSectionGroup, token);
         await _uow.SaveChangeAsync(token);
-        return sectionGroup.Adapt<SectionGroupDto>();
+        return newSectionGroup.Adapt<SectionGroupDto>();
     }
 }

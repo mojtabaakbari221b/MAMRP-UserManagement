@@ -1,9 +1,9 @@
 namespace UserManagement.Infrastructure.ExternalServices.Identities;
 
-public sealed class AcountManager(
+public sealed class AccountManager(
     SignInManager<User> signInManager,
     UserManager<User> userManager)
-    : IAcountManager
+    : IAccountManager
 {
     private readonly SignInManager<User> _signInManager = signInManager;
     private readonly UserManager<User> _userManager = userManager;

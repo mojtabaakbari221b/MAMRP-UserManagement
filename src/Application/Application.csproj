@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="ApplicationServices\Account\Queries\" />
-    <Folder Include="ApplicationServices\SectionGroups\Queries\" />
   </ItemGroup>
 
 </Project>

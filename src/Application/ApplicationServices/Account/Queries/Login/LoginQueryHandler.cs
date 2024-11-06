@@ -1,14 +1,14 @@
 ﻿namespace UserManagement.Application.ApplicationServices.Account.Queries.Login;
 
-public sealed class LoginQueryHandler(IAcountManager acountManager, ITokenFactory tokenFactory)
+public sealed class LoginQueryHandler(IAccountManager accountManager, ITokenFactory tokenFactory)
     : IRequestHandler<LoginQueryRequest, LoginQueryResponse>
 {
-    private readonly IAcountManager _acountManager = acountManager;
+    private readonly IAccountManager _accountManager = accountManager;
     private readonly ITokenFactory _tokenFactory = tokenFactory;
 
     public async Task<LoginQueryResponse> Handle(LoginQueryRequest request, CancellationToken cancellationToken)
     {
-        var result = await _acountManager.Login(request.Username, request.Password);
+        var result = await _accountManager.Login(request.Username, request.Password);
         if (!result.IsSuccess)
         {
             throw new LoginFailedException();

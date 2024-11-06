@@ -1,4 +1,8 @@
-﻿global using UserManagement.Application.ApplicationServices.SectionGroups.Commands.Add;
+﻿global using UserManagement.Application.ApplicationServices.SectionGroups.Queries.GetById;
+global using UserManagement.Application.ApplicationServices.SectionGroups.Commands.Delete;
+global using UserManagement.Application.ApplicationServices.SectionGroups.Commands.Update;
+global using UserManagement.Application.ApplicationServices.SectionGroups.Queries.GetAll;
+global using UserManagement.Application.ApplicationServices.SectionGroups.Commands.Add;
 global using UserManagement.Application.ApplicationServices.Account.Commands.Register;
 global using UserManagement.Application.ApplicationServices.Sections.Commands.Delete;
 global using UserManagement.Application.ApplicationServices.Sections.Commands.Update;
@@ -8,10 +12,12 @@ global using UserManagement.Application.ApplicationServices.Account.Queries.Logi
 global using UserManagement.Application.ApplicationServices.Sections.Commands.Add;
 global using UserManagement.Application.ApplicationServices.Sections.Dtos;
 global using UserManagement.Infrastructure;
+global using UserManagement.Domain.Enums;
 global using UserManagement.Application;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.OpenApi.Models;
 global using UserManagement.Api;
 global using FluentResults;
+global using Share.Helper;
 global using MediatR;
 global using Share;

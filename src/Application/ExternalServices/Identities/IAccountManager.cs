@@ -2,7 +2,7 @@
 
 namespace UserManagement.Application.ExternalServices.Identities;
 
-public interface IAcountManager
+public interface IAccountManager
 {
     Task<LoginResult> Login(string username, string password);
     Task Register(RegisterDto registerDto);
