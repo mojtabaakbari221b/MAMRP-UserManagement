@@ -24,6 +24,9 @@
 
   <ItemGroup>
     <Folder Include="ApplicationServices\Account\Queries\" />
+    <Folder Include="ApplicationServices\Roles\Commands\Update\" />
+    <Folder Include="ApplicationServices\Roles\Queries\GetAll\" />
+    <Folder Include="ApplicationServices\Roles\Queries\GetById\" />
   </ItemGroup>
 
 </Project>

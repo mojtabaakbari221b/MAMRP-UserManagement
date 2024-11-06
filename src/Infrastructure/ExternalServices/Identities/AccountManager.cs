@@ -1,6 +1,3 @@
-using Mapster;
-using UserManagement.Infrastructure.ExternalServices.Identities.Exceptions;
-
 namespace UserManagement.Infrastructure.ExternalServices.Identities;
 
 public sealed class AccountManager(
@@ -14,6 +11,7 @@ public sealed class AccountManager(
     private readonly UserManager<User> _userManager = userManager;
     private readonly RoleManager<Role> _roleManager = roleManager;
     private readonly UserManagementDbContext _context = context;
+
     public async Task<LoginResult> Login(string username, string password)
     {
         var result = await _signInManager.PasswordSignInAsync(username, password, false, lockoutOnFailure: false);
@@ -31,23 +29,29 @@ public sealed class AccountManager(
         await _userManager.CreateAsync(user, registerDto.Password);
     }
 
-    public async Task RemoveUserRolesAndUserClaimsAsync(Guid userID)
+    public async Task RemoveUserRolesAndUserClaimsAsync(Guid userId)
     {
-        var userRoleIds = _context.UserRoles.Where(u => u.UserId == userID).Select(u => u.RoleId);
+        var userRoleIds = _context.UserRoles
+            .Where(u => u.UserId == userId)
+            .Select(u => u.RoleId);
         var sectionIds = _context.RoleClaims.Where(u => userRoleIds.Contains(u.RoleId)).Select(u => u.SectionId);
 
-        await _context.UserRoles.Where(u => u.UserId == userID).ExecuteDeleteAsync();
+        await _context.UserRoles.Where(u => u.UserId == userId).ExecuteDeleteAsync();
 
-        _context.UserClaims.Where(ur => ur.UserId == userID).Where(u => sectionIds.Contains(u.SectionId));   
+        await _context.UserClaims
+            .Where(u => u.UserId == userId && sectionIds.Contains(u.SectionId))
+            .ExecuteDeleteAsync();
     }
 
-    public async Task<UserDto> GetUserById(string id) {
+    public async Task<UserDto> GetUserById(string id)
+    {
         var user = await _userManager.FindByIdAsync(id) ?? throw new UserNotFoundException();
         var userDto = user.Adapt<UserDto>();
         return userDto;
     }
 
-    public async Task<RoleDto> GetRoleById(string id) {
+    public async Task<RoleDto> GetRoleById(string id)
+    {
         var role = await _roleManager.FindByIdAsync(id) ?? throw new RoleNotFoundException();
         var roleDto = role.Adapt<RoleDto>();
         return roleDto;
@@ -60,7 +64,25 @@ public sealed class AccountManager(
         await _userManager.AddToRoleAsync(user, role.Name);
 
         var claims = await _context.RoleClaims.Where(rc => rc.RoleId == roleDto.Id).ToListAsync();
-        
+
         await _userManager.AddClaimsAsync(user, (IEnumerable<Claim>)claims);
     }
+
+    public async Task<bool> AddRole(string roleName, string displayName)
+    {
+        if (await _roleManager.RoleExistsAsync(roleName))
+        {
+            return false;
+        }
+
+        Role role = new()
+        {
+            Name = roleName,
+            DisplayName = displayName
+        };
+    
+        await _roleManager.CreateAsync(role);
+        return true;
+    }
+
 }

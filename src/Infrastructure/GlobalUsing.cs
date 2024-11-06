@@ -1,5 +1,6 @@
 ﻿global using UserManagement.Application.ApplicationServices.SectionGroups.Queries.GetById;
 global using UserManagement.Application.ApplicationServices.SectionGroups.Queries.GetAll;
+global using UserManagement.Infrastructure.ExternalServices.Identities.Exceptions;
 global using UserManagement.Infrastructure.ExternalServices.Identities.Options;
 global using UserManagement.Application.ExternalServices.Identities.DTOs;
 global using UserManagement.Infrastructure.ExternalServices.Identities;
@@ -28,4 +29,5 @@ global using System.Security.Claims;
 global using System.Reflection;
 global using Share.Helper;
 global using System.Text;
+global using Mapster;
 global using Share;

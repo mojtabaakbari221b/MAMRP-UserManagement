@@ -1,4 +1,4 @@
-﻿using UserManagement.Application.ApplicationServices.UserRole.Commands.ChangeRoleOfUser;
+﻿using UserManagement.Application.ApplicationServices.UserRoles.Commands.ChangeRoleOfUser;
 
 namespace UserManagement.Api.Controllers.Account;
 
