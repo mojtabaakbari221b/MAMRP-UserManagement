@@ -2,18 +2,18 @@
 
 namespace UserManagement.Application.ApplicationServices.Roles.Commands.Add;
 
-public sealed class AddRoleCommandHandler(IAccountManager accountManager)
+public sealed class AddRoleCommandHandler(IUnitOfWork uow)
     : IRequestHandler<AddRoleCommandRequest, AddRoleCommandResponse>
 {
-    private readonly IAccountManager _accountManager = accountManager;
+    private readonly IUnitOfWork _uow = uow;
 
     public async Task<AddRoleCommandResponse> Handle(AddRoleCommandRequest request, CancellationToken cancellationToken)
     {
-        var result = await _accountManager.AddRole(request.RoleName, request.DisplayName);
-        if (!result)
+        if (!await _uow.Roles.RoleExistsAsync(request.RoleName))
         {
             throw new RoleAlredyExistException();
         }
+        await _uow.Roles.AddRole(request.RoleName, request.DisplayName);
         return request.Adapt<AddRoleCommandResponse>();
     }
 }

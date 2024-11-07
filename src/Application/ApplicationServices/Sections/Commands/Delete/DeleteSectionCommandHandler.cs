@@ -10,6 +10,6 @@ public class DeleteSectionCommandHandler(IUnitOfWork uow) : IRequestHandler<Dele
                       ?? throw new SectionNotFoundException();
 
         _uow.Sections.Delete(section);
-        await _uow.SaveChangeAsync(token);
+        await _uow.SaveChangesAsync(token);
     }
 }

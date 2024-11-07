@@ -1,12 +1,23 @@
+using UserManagement.Domain.Services.DTOs;
+
 namespace UserManagement.Application.ApplicationServices.UserRoles.Commands.ChangeSectionClaimOfRole;
 
-public class ChangeSectionClaimOfRoleRequestHandler(IAccountManager acountManager) : IRequestHandler<ChangeSectionClaimOfRoleRequest>
+public class ChangeSectionClaimOfRoleRequestHandler(IUnitOfWork uow) : IRequestHandler<ChangeSectionClaimOfRoleRequest>
 {
-    private readonly IAccountManager _acountManager = acountManager;
-    public async Task Handle(ChangeSectionClaimOfRoleRequest request, CancellationToken cancellationToken)
+    private readonly IUnitOfWork _uow = uow;
+
+    public async Task Handle(ChangeSectionClaimOfRoleRequest request, CancellationToken token)
     {
-        var roleDto = new RoleDto(request.RoleId, null);
-        await _acountManager.RemoveSectionClaimOfRoleAsync(roleDto);
-        await _acountManager.AddSectionIdsToRoleClaimAsync(roleDto, request.SelectionIds);
+        await _uow.BeginTransactionAsync(token);
+        try
+        {
+            await _uow.Roles.RemoveSectionClaimOfRoleAsync(request.RoleId);
+            await _uow.Roles.AddSectionIdsToRoleClaimAsync(request.RoleId, request.SelectionIds);
+            await _uow.CommitTransactionAsync(token);
+        }
+        catch
+        {
+            await _uow.RoleBackTransactionAsync(token);
+        }
     }
 }

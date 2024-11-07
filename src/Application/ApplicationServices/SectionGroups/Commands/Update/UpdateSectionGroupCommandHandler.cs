@@ -14,6 +14,6 @@ public sealed class UpdateSectionGroupCommandHandler(IUnitOfWork uow)
         sectionGroup.Name = request.Name;
         
         _uow.SectionGroups.Update(sectionGroup);
-        await _uow.SaveChangeAsync(token);
+        await _uow.SaveChangesAsync(token);
     }
 }

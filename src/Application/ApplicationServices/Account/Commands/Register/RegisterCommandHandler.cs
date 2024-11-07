@@ -1,15 +1,16 @@
-﻿namespace UserManagement.Application.ApplicationServices.Account.Commands.Register;
+﻿using UserManagement.Domain.Services.DTOs;
+
+namespace UserManagement.Application.ApplicationServices.Account.Commands.Register;
 
 
 
-public sealed class RegisterCommandHandler(IAccountManager accountManager)
+public sealed class RegisterCommandHandler(IUnitOfWork uow)
     : IRequestHandler<RegisterCommandRequest>
 {
-    private readonly IAccountManager _accountManager = accountManager;
-
+    private readonly IUnitOfWork _uow = uow;
     public async Task Handle(RegisterCommandRequest request, CancellationToken token)
     {
         var model = request.Adapt<RegisterDto>();
-        await _accountManager.Register(model);
+        await _uow.Users.Register(model);
     }
 }

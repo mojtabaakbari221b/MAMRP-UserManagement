@@ -13,7 +13,7 @@ public class AddSectionCommandHandler(IUnitOfWork uow) : IRequestHandler<AddSect
 
         var newSection = request.Adapt<Section>();
         var section = await _uow.Sections.Add(newSection);
-        await _uow.SaveChangeAsync(token);
+        await _uow.SaveChangesAsync(token);
         return section.Adapt<SectionDto>();
     }
 }
