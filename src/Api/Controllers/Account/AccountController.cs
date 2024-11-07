@@ -1,4 +1,5 @@
 ﻿using UserManagement.Application.ApplicationServices.UserRole.Commands.ChangeRoleOfUser;
+using UserManagement.Application.ApplicationServices.UserRole.Commands.ChangeSectionClaimOfRole;
 
 namespace UserManagement.Api.Controllers.Account;
 
@@ -27,6 +28,12 @@ public sealed class AccountController(ISender sender) : ControllerBase
 
     [HttpPost("change-user-role")]
     public async Task<Result> ChangeUserRole(ChangeRoleOfUserRequest request) {
+        await _sender.Send(request);
+        return Result.Ok();
+    }
+    
+    [HttpPost("change-role-section-claim")]
+    public async Task<Result> ChangeRoleSectionClaim(ChangeSectionClaimOfRoleRequest request) {
         await _sender.Send(request);
         return Result.Ok();
     }
