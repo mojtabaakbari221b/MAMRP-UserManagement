@@ -1,3 +1,3 @@
-namespace UserManagement.Application.ApplicationServices.UserRole.Commands.ChangeSectionClaimOfRole;
+namespace UserManagement.Application.ApplicationServices.UserRoles.Commands.ChangeSectionClaimOfRole;
 
 public sealed record ChangeSectionClaimOfRoleRequest(Guid RoleId, List<long> SelectionIds) : IRequest;

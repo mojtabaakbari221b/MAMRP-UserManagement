@@ -1,4 +1,4 @@
-namespace UserManagement.Application.ApplicationServices.UserRole.Commands.ChangeSectionClaimOfRole;
+namespace UserManagement.Application.ApplicationServices.UserRoles.Commands.ChangeSectionClaimOfRole;
 
 public class ChangeSectionClaimOfRoleRequestHandler(IAccountManager acountManager) : IRequestHandler<ChangeSectionClaimOfRoleRequest>
 {
