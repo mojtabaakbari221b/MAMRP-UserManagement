@@ -63,4 +63,27 @@ public sealed class AccountManager(
         
         await _userManager.AddClaimsAsync(user, (IEnumerable<Claim>)claims);
     }
+
+    public async Task RemoveSectionClaimOfRoleAsync(RoleDto roleDto)
+    {
+        await _context.RoleClaims.Where(u => u.RoleId == roleDto.Id).ExecuteDeleteAsync();
+    }
+
+    public async Task AddSectionIdsToRoleClaimAsync(RoleDto roleDto, IEnumerable<long> sectionIds)
+    {
+        List<RoleClaim> roleClaims = new();
+        
+        foreach (var sectionId in sectionIds)
+        {
+            
+            RoleClaim roleClaim = new()
+            {
+                RoleId = roleDto.Id,
+                SectionId = sectionId,
+            };
+            roleClaims.Append(roleClaim);
+        }
+
+        await _context.RoleClaims.AddRangeAsync(roleClaims);
+    }
 }

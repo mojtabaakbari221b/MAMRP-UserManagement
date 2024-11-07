@@ -8,4 +8,6 @@ public interface IAccountManager
     Task<UserDto> GetUserById(string id);
     Task<RoleDto> GetRoleById(string id);
     Task AddRoleAndTheirClaimsToUserAsync(UserDto userDto, RoleDto roleDto);
+    Task RemoveSectionClaimOfRoleAsync(RoleDto roleDto);
+    Task AddSectionIdsToRoleClaimAsync(RoleDto roleDto, IEnumerable<long> sectionIds);
 }
