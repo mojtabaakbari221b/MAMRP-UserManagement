@@ -1,13 +1,17 @@
-﻿namespace UserManagement.Infrastructure.ExternalServices.Identities;
+﻿using UserManagement.Domain.Services.DTOs;
+
+namespace UserManagement.Infrastructure.ExternalServices.Identities;
 
 public sealed class TokenFactory(IOptions<TokenOption> options) : ITokenFactory
 {
     private readonly BearerTokenOption _optionBearer = options.Value.BearerTokenOption;
     private readonly RefreshTokenOption _optionsRefresh = options.Value.RefreshTokenOption;
+    private readonly RoleManager<Role> _roleManager;
+
     public async Task<TokenDto> CreateTokenAsync(Guid userId)
     {
         var accessToken = await CreateBearerAccessToken(userId);
-        var refreshToken =  await CreateRefreshToken(userId);
+        var refreshToken = await CreateRefreshToken(userId);
         return new TokenDto(accessToken, refreshToken);
     }
 
@@ -16,14 +20,11 @@ public sealed class TokenFactory(IOptions<TokenOption> options) : ITokenFactory
         var claims = new List<Claim>
         {
             // Unique Id for all Jwt tokes
-            new(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti,
-                StringUtils.CreateCryptographicallySecureGuid(), ClaimValueTypes.String, _optionBearer.Issuer),
+            new(JwtRegisteredClaimNames.Jti, StringUtils.CreateCryptographicallySecureGuid(), ClaimValueTypes.String, _optionBearer.Issuer),
             // Issuer
-            new(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Iss, _optionBearer.Issuer,
-                ClaimValueTypes.String, _optionBearer.Issuer),
+            new(JwtRegisteredClaimNames.Iss, _optionBearer.Issuer, ClaimValueTypes.String, _optionBearer.Issuer),
             // Issued at
-            new(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Iat,
-                DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64, _optionBearer.Issuer),
+            new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64, _optionBearer.Issuer),
             // User Costume Data
             new("Id", id.ToString(), ClaimValueTypes.String, _optionBearer.Issuer),
             // add roles

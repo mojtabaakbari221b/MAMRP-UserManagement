@@ -15,6 +15,6 @@ public class UpdateSectionCommandHandler(IUnitOfWork uow) : IRequestHandler<Upda
         section.GroupId = request.GroupId;
 
         _uow.Sections.Update(section);
-        await _uow.SaveChangeAsync(token);
+        await _uow.SaveChangesAsync(token);
     }
 }

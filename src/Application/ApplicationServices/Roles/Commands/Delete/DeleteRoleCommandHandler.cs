@@ -1,12 +1,13 @@
 ﻿namespace UserManagement.Application.ApplicationServices.Roles.Commands.Delete;
 
-public sealed class DeleteRoleCommandHandler(IAccountManager accountManager)
+public sealed class DeleteRoleCommandHandler(IUnitOfWork uow)
     : IRequestHandler<DeleteRoleCommandRequest>
 {
-    private readonly IAccountManager _accountManager = accountManager;
+    private readonly IUnitOfWork _uow = uow;
 
-    public Task Handle(DeleteRoleCommandRequest request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteRoleCommandRequest request, CancellationToken token)
     {
-        throw new NotImplementedException();
+        var model = await _uow.Roles.GetRoleById(request.Id.ToString());
+        await _uow.Roles.Delete(model);
     }
 }

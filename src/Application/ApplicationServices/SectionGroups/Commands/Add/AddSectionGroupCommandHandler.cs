@@ -9,7 +9,7 @@ public sealed class AddSectionGroupCommandHandler(IUnitOfWork uow)
     {
         var newSectionGroup = request.Adapt<SectionGroup>();
         await _uow.SectionGroups.AddAsync(newSectionGroup, token);
-        await _uow.SaveChangeAsync(token);
+        await _uow.SaveChangesAsync(token);
         return newSectionGroup.Adapt<SectionGroupDto>();
     }
 }
