@@ -2,11 +2,11 @@
 
 namespace UserManagement.Infrastructure.ExternalServices.Identities;
 
-public sealed class TokenFactory(IOptions<TokenOption> options) : ITokenFactory
+public sealed class TokenFactory(IOptions<TokenOption> options, UserManager<User> userManager) : ITokenFactory
 {
     private readonly BearerTokenOption _optionBearer = options.Value.BearerTokenOption;
     private readonly RefreshTokenOption _optionsRefresh = options.Value.RefreshTokenOption;
-    private readonly RoleManager<Role> _roleManager;
+    private readonly UserManager<User> _userManager = userManager;
 
     public async Task<TokenDto> CreateTokenAsync(Guid userId)
     {
@@ -27,9 +27,12 @@ public sealed class TokenFactory(IOptions<TokenOption> options) : ITokenFactory
             new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64, _optionBearer.Issuer),
             // User Costume Data
             new("Id", id.ToString(), ClaimValueTypes.String, _optionBearer.Issuer),
-            // add roles
         };
-
+        // TODO: Add Section code in User token calim
+        var user = await _userManager.FindByIdAsync(id.ToString());
+        var userClaims = await _userManager.GetClaimsAsync(user!);
+        claims.AddRange(userClaims);
+        
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_optionBearer.Key));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var now = DateTime.UtcNow;
