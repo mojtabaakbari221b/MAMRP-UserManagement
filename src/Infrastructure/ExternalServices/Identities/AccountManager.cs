@@ -86,4 +86,22 @@ public sealed class AccountManager(
 
         await _context.RoleClaims.AddRangeAsync(roleClaims);
     }
+
+    public async Task<bool> AddRole(string roleName, string displayName)
+    {
+        if (await _roleManager.RoleExistsAsync(roleName))
+        {
+            return false;
+        }
+
+        Role role = new()
+        {
+            Name = roleName,
+            DisplayName = displayName
+        };
+    
+        await _roleManager.CreateAsync(role);
+        return true;
+    }
+
 }

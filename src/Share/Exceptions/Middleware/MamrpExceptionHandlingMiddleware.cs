@@ -26,7 +26,7 @@ public class MamrpExceptionHandlingMiddleware : IMiddleware
         {
             case MamrpBaseBadRequestException badRequestEx:
                 statusCode = (int)HttpStatusCode.BadRequest;
-                return new { IsSuccess = false, IsFailed = true, Message = badRequestEx.Message };
+                return new { IsSuccess = false, IsFailed = true, Message = badRequestEx.Message  };
 
             case MamrpBaseNotFoundException notFoundEx:
                 statusCode = (int)HttpStatusCode.NotFound;
