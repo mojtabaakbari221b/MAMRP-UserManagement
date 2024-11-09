@@ -13,7 +13,7 @@ public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbC
             DisplayName = displayName
         };
 
-        var result = await _roleManager.CreateAsync(role);
+        await _roleManager.CreateAsync(role);
     }
 
     public async Task<bool> RoleExistsAsync(string roleName)
