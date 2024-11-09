@@ -12,7 +12,12 @@ public static class ConfigureServices
         
         // DI DbContext 
         services.AddDbContext<UserManagementDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+        {
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            // options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking); // TODO : check this
+        });
+        
+        
         
         // DI Identity
         services.AddIdentity<User, Role>()
