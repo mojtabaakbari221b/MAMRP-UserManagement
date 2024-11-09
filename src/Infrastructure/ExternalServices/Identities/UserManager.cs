@@ -23,10 +23,13 @@ public sealed class UserManager(
 
     public async Task Register(RegisterDto registerDto)
     {
+        // TODO : move this info to the dto or ...
         User user = new()
         {
+            UserName = registerDto.Username,
             Name = registerDto.Username,
             FamilyName = registerDto.FamilyName,
+            Email = $"{registerDto.Username}@mamco.ir",
         };
         await _userManager.CreateAsync(user, registerDto.Password);
     }
@@ -48,13 +51,9 @@ public sealed class UserManager(
             .ExecuteDeleteAsync();
     }
     
-    //TODO: "Business logic should not reside in the infrastructure layer.",
-    //TODO: Move the exceptions to the Application layer 
     public async Task<UserDto> GetUserById(string id)
     {
-        var user = await _userManager.FindByIdAsync(id)
-                   ?? throw new UserNotFoundException();
-
+        var user = await _userManager.FindByIdAsync(id);
         return user.Adapt<UserDto>();
     }
 
@@ -62,8 +61,7 @@ public sealed class UserManager(
     public async Task AddRoleAndTheirClaimsToUserAsync(UserDto userDto, RoleDto roleDto)
     {
         var user = userDto.Adapt<User>();
-        await _userManager.AddToRoleAsync(user, roleDto.Name);
-
+        var result = await _userManager.AddToRoleAsync(user, roleDto.Name);
         var claims = await _context.RoleClaims
             .Where(rc => rc.RoleId == roleDto.Id)
             .Select(rc => new Claim(rc.Section.Name, rc.Section.Url, ClaimValueTypes.String, _optionBearer.Issuer))
