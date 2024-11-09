@@ -13,6 +13,13 @@ public static class ConfigureServices
 
         // DI Options
         services.Configure<TokenOption>(configuration);
+        
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.User.RequireUniqueEmail = true;
+            options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        });
         return services;
     }
 }
