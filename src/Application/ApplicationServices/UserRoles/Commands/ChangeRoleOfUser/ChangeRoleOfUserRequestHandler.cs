@@ -19,8 +19,7 @@ public sealed class ChangeRoleOfUserRequestHandler(IUnitOfWork uow) : IRequestHa
         catch
         {
             await _uow.RoleBackTransactionAsync(token);
+            throw;
         }
-        
-
     }
 }
