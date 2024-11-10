@@ -1,3 +1,5 @@
+using UserManagement.Application.ApplicationServices.Roles.Exceptions;
+
 namespace UserManagement.Application.ApplicationServices.UserRoles.Commands.ChangeRoleOfUser;
 
 public sealed class ChangeRoleOfUserRequestHandler(IUnitOfWork uow) : IRequestHandler<ChangeRoleOfUserRequest>

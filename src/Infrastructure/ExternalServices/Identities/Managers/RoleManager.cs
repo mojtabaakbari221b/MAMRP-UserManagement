@@ -1,4 +1,7 @@
-﻿namespace UserManagement.Infrastructure.ExternalServices.Identities.Managers;
+﻿using UserManagement.Application.ApplicationServices.Roles.Queries;
+using UserManagement.Application.ApplicationServices.Roles.Queries.GetById;
+
+namespace UserManagement.Infrastructure.ExternalServices.Identities.Managers;
 
 public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbContext context) : IRoleManager
 {
@@ -18,7 +21,11 @@ public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbC
 
     public async Task<bool> RoleExistsAsync(string roleName)
         => await _roleManager.RoleExistsAsync(roleName);
-    
+
+    public async Task<bool> RoleExistsAsync(Guid roleId)
+        => await _context.Roles.AsQueryable()
+            .AnyAsync(role => role.Id == roleId);
+
     public async Task<RoleDto?> GetRoleById(string id)
     {
         var role = await _roleManager.FindByIdAsync(id);
@@ -41,9 +48,23 @@ public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbC
         await _context.RoleClaims.AddRangeAsync(roleClaims);
     }
 
-    public async Task Delete(RoleDto roleDto)
+    public async Task Delete(Guid roleId)
+    {
+        await _context.Roles.AsQueryable()
+            .Where(role => role.Id == roleId)
+            .ExecuteDeleteAsync();
+    }
+
+    public async Task Update(RoleDto roleDto)
     {
         var role = roleDto.Adapt<Role>();
-        await _roleManager.DeleteAsync(role);
+        await _roleManager.UpdateAsync(role);
     }
+
+    public async Task<IEnumerable<IResponse>> GetAll(int pageNumber, int pageSize, CancellationToken token = default)
+        => await _context.Roles.AsQueryable()
+            .Select(r => r.Adapt<GetRoleQueryResponse>())
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(token);
 }

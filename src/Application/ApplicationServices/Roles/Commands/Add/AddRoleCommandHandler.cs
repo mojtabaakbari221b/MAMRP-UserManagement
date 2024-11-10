@@ -9,7 +9,7 @@ public sealed class AddRoleCommandHandler(IUnitOfWork uow)
 
     public async Task<AddRoleCommandResponse> Handle(AddRoleCommandRequest request, CancellationToken cancellationToken)
     {
-        if (!await _uow.Roles.RoleExistsAsync(request.RoleName))
+        if (await _uow.Roles.RoleExistsAsync(request.RoleName))
         {
             throw new RoleAlredyExistException();
         }

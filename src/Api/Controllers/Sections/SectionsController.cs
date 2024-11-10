@@ -13,8 +13,7 @@ public class SectionsController(ISender sender) : ControllerBase
         return Result.Ok(responses);
     }
 
-    [HttpGet]
-    [Route("{id:long}")]
+    [HttpGet("{id:long:required}")] 
     public async Task<Result<SectionDto>> GetById(long id,
         CancellationToken token = default)
     {
@@ -22,7 +21,7 @@ public class SectionsController(ISender sender) : ControllerBase
         return Result.Ok(result);
     }
 
-    [HttpDelete("{id:long}")]
+    [HttpDelete("{id:long:required}")]
     public async Task<Result<bool>> Delete(long id,
         CancellationToken token = default)
     {
@@ -30,7 +29,7 @@ public class SectionsController(ISender sender) : ControllerBase
         return Result.Ok(true);
     }
 
-    [HttpPut("{id:long}")]
+    [HttpPut("{id:long:required}")]
     public async Task<Result<bool>> Update(long id, UpdateSectionDto model,
         CancellationToken token = default)
     {

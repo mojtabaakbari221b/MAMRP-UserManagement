@@ -1,4 +1,6 @@
-﻿namespace UserManagement.Application.ApplicationServices.Roles.Commands.Delete;
+﻿using UserManagement.Application.ApplicationServices.Roles.Exceptions;
+
+namespace UserManagement.Application.ApplicationServices.Roles.Commands.Delete;
 
 public sealed class DeleteRoleCommandHandler(IUnitOfWork uow)
     : IRequestHandler<DeleteRoleCommandRequest>
@@ -7,11 +9,10 @@ public sealed class DeleteRoleCommandHandler(IUnitOfWork uow)
 
     public async Task Handle(DeleteRoleCommandRequest request, CancellationToken token)
     {
-        var role = await _uow.Roles.GetRoleById(request.Id.ToString());
-        if (role is null)
+        if (!await _uow.Roles.RoleExistsAsync(request.Id))
         {
             throw new RoleNotFoundException();
         }
-        await _uow.Roles.Delete(role);
+        await _uow.Roles.Delete(request.Id);
     }
 }

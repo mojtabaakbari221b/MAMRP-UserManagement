@@ -1,24 +1,24 @@
 ﻿namespace UserManagement.Application.ApplicationServices.Sections.Commands.Add;
 
-public class AddMenuCommandValidator : AbstractValidator<AddSectionCommandRequest>
+public class AddSectionCommandValidator : AbstractValidator<AddSectionCommandRequest>
 {
-    public AddMenuCommandValidator()
+    public AddSectionCommandValidator()
     {
-        RuleFor(menu => menu.GroupId)
+        RuleFor(s => s.GroupId)
           .NotEmpty()
           .WithMessage("Group Id is required.");
 
-        RuleFor(user => user.Name)
+        RuleFor(s => s.Name)
           .NotEmpty()
           .MaximumLength(50)
           .WithMessage("Name is required.");
 
-        RuleFor(user => user.Url)
+        RuleFor(s => s.Url)
           .NotEmpty()
           .MaximumLength(200)
           .WithMessage("Url is required.");
 
-        RuleFor(user => user.Description)
+        RuleFor(s => s.Description)
           .MaximumLength(200)
           .WithMessage("maximum length is 200.");
     }

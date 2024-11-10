@@ -10,7 +10,13 @@ global using UserManagement.Application.ApplicationServices.Sections.Queries.Get
 global using UserManagement.Application.ApplicationServices.Sections.Queries.GetAll;
 global using UserManagement.Application.ApplicationServices.Account.Queries.Login;
 global using UserManagement.Application.ApplicationServices.Sections.Commands.Add;
+global using UserManagement.Application.ApplicationServices.Roles.Commands.Delete;
+global using UserManagement.Application.ApplicationServices.Roles.Commands.Update;
+global using UserManagement.Application.ApplicationServices.Roles.Queries.GetById;
+global using UserManagement.Application.ApplicationServices.Roles.Queries.GetAll;
+global using UserManagement.Application.ApplicationServices.Roles.Commands.Add;
 global using UserManagement.Infrastructure.ExternalServices.Identities.Tokens;
+global using UserManagement.Application.ApplicationServices.Roles.Queries;
 global using UserManagement.Application.ApplicationServices.Sections.Dtos;
 global using Microsoft.AspNetCore.Authorization;
 global using UserManagement.Infrastructure;

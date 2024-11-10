@@ -2,6 +2,7 @@
 global using UserManagement.Application.ApplicationServices.UserRoles.Exceptions;
 global using UserManagement.Application.ApplicationServices.Sections.Exceptions;
 global using UserManagement.Application.ApplicationServices.Account.Exceptions;
+global using UserManagement.Application.ApplicationServices.Roles.Exceptions;
 global using UserManagement.Application.ApplicationServices.Sections.Dtos;
 global using UserManagement.Application.ExternalServices.Identities;
 global using Microsoft.Extensions.DependencyInjection;
