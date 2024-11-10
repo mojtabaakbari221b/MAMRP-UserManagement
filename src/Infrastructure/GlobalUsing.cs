@@ -1,6 +1,5 @@
 ﻿global using UserManagement.Application.ApplicationServices.SectionGroups.Queries.GetById;
 global using UserManagement.Application.ApplicationServices.SectionGroups.Queries.GetAll;
-global using UserManagement.Infrastructure.ExternalServices.Identities.Exceptions;
 global using UserManagement.Infrastructure.ExternalServices.Identities.Options;
 global using UserManagement.Infrastructure.ExternalServices.Identities;
 global using UserManagement.Infrastructure.Persistence.Repositories;

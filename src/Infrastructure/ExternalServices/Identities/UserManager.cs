@@ -1,7 +1,4 @@
-﻿using UserManagement.Domain.Services;
-using UserManagement.Domain.Services.DTOs;
-
-namespace UserManagement.Infrastructure.ExternalServices.Identities;
+﻿namespace UserManagement.Infrastructure.ExternalServices.Identities;
 
 public sealed class UserManager(
     SignInManager<User> signInManager,
@@ -33,29 +30,38 @@ public sealed class UserManager(
 
     public async Task RemoveUserRolesAndUserClaimsAsync(Guid userId)
     {
-        var userRoleIds = _context.UserRoles
+        var userRoleIds = await _context.UserRoles
             .Where(u => u.UserId == userId)
-            .Select(u => u.RoleId);
+            .Select(u => u.RoleId)
+            .ToListAsync();
 
-        var sectionIds = _context.RoleClaims
-            .Where(u => userRoleIds.Contains(u.RoleId))
-            .Select(u => u.SectionId);
+        var sectionIds = await _context.RoleClaims
+            .Where(rc => userRoleIds.Contains(rc.RoleId))
+            .Select(rc => rc.SectionId)
+            .ToListAsync();
 
-        await _context.UserRoles.Where(u => u.UserId == userId).ExecuteDeleteAsync();
+        await _context.UserRoles
+            .Where(u => u.UserId == userId)
+            .ExecuteDeleteAsync();
 
         await _context.UserClaims
-            .Where(u => u.UserId == userId && sectionIds.Contains(u.SectionId))
+            .Where(uc => uc.UserId == userId && sectionIds.Contains(uc.SectionId))
             .ExecuteDeleteAsync();
     }
-    
-    //TODO: "Business logic should not reside in the infrastructure layer.",
-    //TODO: Move the exceptions to the Application layer 
-    public async Task<UserDto> GetUserById(string id)
-    {
-        var user = await _userManager.FindByIdAsync(id)
-                   ?? throw new UserNotFoundException();
 
-        return user.Adapt<UserDto>();
+    public async Task<UserDto?> GetUserById(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        return user?.Adapt<UserDto>();
+    }
+
+    public Task SaveToken(TokenDto tokens)
+    {
+        UserToken token = new()
+        {
+            t = tokens.AccessToken,
+        };
+        _userManager.
     }
 
     // Refactor

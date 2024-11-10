@@ -1,4 +1,5 @@
-﻿using UserManagement.Domain.Services.DTOs;
+﻿using UserManagement.Application.ExternalServices.Identities.DTOs;
+using UserManagement.Domain.Services.DTOs;
 
 namespace UserManagement.Infrastructure.ExternalServices.Identities;
 
@@ -8,11 +9,11 @@ public sealed class TokenFactory(IOptions<TokenOption> options, UserManager<User
     private readonly RefreshTokenOption _optionsRefresh = options.Value.RefreshTokenOption;
     private readonly UserManager<User> _userManager = userManager;
 
-    public async Task<TokenDto> CreateTokenAsync(Guid userId)
+    public async Task<TokenResult> CreateTokenAsync(Guid userId)
     {
         var accessToken = await CreateBearerAccessToken(userId);
-        var refreshToken = await CreateRefreshToken(userId);
-        return new TokenDto(accessToken, refreshToken);
+        var refreshToken = CreateRefreshToken(userId);
+        return new TokenResult(accessToken, refreshToken);
     }
 
     private async Task<string> CreateBearerAccessToken(Guid id)
@@ -25,6 +26,8 @@ public sealed class TokenFactory(IOptions<TokenOption> options, UserManager<User
             new(JwtRegisteredClaimNames.Iss, _optionBearer.Issuer, ClaimValueTypes.String, _optionBearer.Issuer),
             // Issued at
             new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64, _optionBearer.Issuer),
+            // for invalidation
+            new(ClaimTypes.SerialNumber, StringUtils.CreateCryptographicallySecureGuid(), ClaimValueTypes.String, _optionsRefresh.Issuer),
             // User Costume Data
             new("Id", id.ToString(), ClaimValueTypes.String, _optionBearer.Issuer),
         };
@@ -47,23 +50,18 @@ public sealed class TokenFactory(IOptions<TokenOption> options, UserManager<User
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    private async Task<string> CreateRefreshToken(Guid id)
+    private string CreateRefreshToken(Guid id)
     {
         var claims = new List<Claim>
         {
             // Unique Id for all Jwt tokes
-            new(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti,
-                StringUtils.CreateCryptographicallySecureGuid(), ClaimValueTypes.String, _optionsRefresh.Issuer),
+            new(JwtRegisteredClaimNames.Jti, StringUtils.CreateCryptographicallySecureGuid(), ClaimValueTypes.String, _optionsRefresh.Issuer),
             // Issuer
-            new(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Iss, _optionsRefresh.Issuer,
-                ClaimValueTypes.String, _optionsRefresh.Issuer),
+            new(JwtRegisteredClaimNames.Iss, _optionsRefresh.Issuer, ClaimValueTypes.String, _optionsRefresh.Issuer),
             // Issued at
-            new(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Iat,
-                DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64,
-                _optionsRefresh.Issuer),
+            new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64, _optionsRefresh.Issuer),
             // for invalidation
-            new(ClaimTypes.SerialNumber, StringUtils.CreateCryptographicallySecureGuid(), ClaimValueTypes.String,
-                _optionsRefresh.Issuer),
+            new(ClaimTypes.SerialNumber, StringUtils.CreateCryptographicallySecureGuid(), ClaimValueTypes.String, _optionsRefresh.Issuer),
             // custom data
             new("Id", id.ToString(), ClaimValueTypes.String, _optionsRefresh.Issuer),
             // add roles

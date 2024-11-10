@@ -6,5 +6,6 @@ public interface IUserManager
     Task<LoginResult> Login(string username, string password);
     Task RemoveUserRolesAndUserClaimsAsync(Guid userId);
     Task Register(RegisterDto registerDto);
-    Task<UserDto> GetUserById(string id);
+    Task<UserDto?> GetUserById(string id);
+    Task SaveToken(TokenDto tokens);
 }

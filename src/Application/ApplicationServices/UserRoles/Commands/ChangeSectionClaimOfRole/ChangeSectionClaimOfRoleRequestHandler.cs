@@ -9,15 +9,10 @@ public class ChangeSectionClaimOfRoleRequestHandler(IUnitOfWork uow) : IRequestH
     public async Task Handle(ChangeSectionClaimOfRoleRequest request, CancellationToken token)
     {
         await _uow.BeginTransactionAsync(token);
-        try
-        {
-            await _uow.Roles.RemoveSectionClaimOfRoleAsync(request.RoleId);
-            await _uow.Roles.AddSectionIdsToRoleClaimAsync(request.RoleId, request.SelectionIds);
-            await _uow.CommitTransactionAsync(token);
-        }
-        catch
-        {
-            await _uow.RoleBackTransactionAsync(token);
-        }
+
+        await _uow.Roles.RemoveSectionClaimOfRoleAsync(request.RoleId);
+        await _uow.Roles.AddSectionIdsToRoleClaimAsync(request.RoleId, request.SelectionIds);
+
+        await _uow.CommitTransactionAsync(token);
     }
 }

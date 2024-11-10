@@ -15,6 +15,7 @@ public sealed class LoginQueryHandler(IUnitOfWork uow, ITokenFactory tokenFactor
         }
 
         var tokens = await _tokenFactory.CreateTokenAsync(result.UserId);
-        return new LoginQueryResponse(tokens.AccessToken, tokens.RefreshToken);
+        await _uow.Users.SaveToken(tokens.Adapt<TokenDto>());
+        return tokens.Adapt<LoginQueryResponse>();
     }
 }
