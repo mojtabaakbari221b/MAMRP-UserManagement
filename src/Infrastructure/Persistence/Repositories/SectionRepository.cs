@@ -31,12 +31,12 @@ public sealed class SectionRepository(UserManagementDbContext context) : ISectio
     public async Task<IResponse?> GetById(long id, CancellationToken token = default)
         => await _context.Sections.AsQueryable()
             .Where(c => c.Id == id)
-            .Select(c => new SectionDto(c.Id, c.Name, c.Url, c.GroupId, c.Description))
+            .Select(c => new SectionDto(c.Id, c.GroupId, c.Name, c.Url, c.Code, c.Description, c.Type))
             .FirstOrDefaultAsync(token);
     
     public async Task<IEnumerable<IResponse>> List(CancellationToken token = default)
         => await _context.Sections.AsQueryable()
-            .Select(s => new SectionDto(s.Id, s.Name, s.Url, s.GroupId, s.Description))
+            .Select(c => new SectionDto(c.Id, c.GroupId, c.Name, c.Url, c.Code, c.Description, c.Type))
             .ToListAsync(token);
 
     

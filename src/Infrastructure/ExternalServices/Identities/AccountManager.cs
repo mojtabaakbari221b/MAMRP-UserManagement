@@ -1,1 +1,0 @@
-namespace UserManagement.Infrastructure.ExternalServices.Identities;

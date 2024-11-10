@@ -1,7 +1,5 @@
 ﻿namespace UserManagement.Api.Controllers.Sections;
 
-
-
 [ApiController]
 [Route("api/[controller]")]
 public class SectionGroupsController(ISender sender) : ControllerBase
@@ -9,6 +7,7 @@ public class SectionGroupsController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpPost]
+    [Authorize(Policy = SectionCode.MamRp01000)]
     public async Task<Result<SectionGroupDto>> Create(AddSectionGroupCommandRequest request,
         CancellationToken token = default)
     {
@@ -41,6 +40,7 @@ public class SectionGroupsController(ISender sender) : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = SectionCode.MamRp02000)]
     public async Task<Result<IEnumerable<GetAllSectionGroupQueryResponse>>> GetAll(
         [FromQuery] GetAllSectionGroupQueryRequest request,
         CancellationToken token = default)

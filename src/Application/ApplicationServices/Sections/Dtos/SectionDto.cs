@@ -2,7 +2,9 @@
 
 public sealed record SectionDto(
     long Id,
+    long GroupId,
     string Name,
     string Url,
-    long GroupId,
-    string Description) : IResponse;
+    string Code,
+    string Description,
+    SectionType Type) : IResponse;

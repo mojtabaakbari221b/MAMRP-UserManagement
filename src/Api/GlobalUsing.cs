@@ -10,14 +10,14 @@ global using UserManagement.Application.ApplicationServices.Sections.Queries.Get
 global using UserManagement.Application.ApplicationServices.Sections.Queries.GetAll;
 global using UserManagement.Application.ApplicationServices.Account.Queries.Login;
 global using UserManagement.Application.ApplicationServices.Sections.Commands.Add;
+global using UserManagement.Infrastructure.ExternalServices.Identities.Tokens;
 global using UserManagement.Application.ApplicationServices.Sections.Dtos;
+global using Microsoft.AspNetCore.Authorization;
 global using UserManagement.Infrastructure;
-global using UserManagement.Domain.Enums;
 global using UserManagement.Application;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.OpenApi.Models;
 global using UserManagement.Api;
 global using FluentResults;
-global using Share.Helper;
 global using MediatR;
 global using Share;

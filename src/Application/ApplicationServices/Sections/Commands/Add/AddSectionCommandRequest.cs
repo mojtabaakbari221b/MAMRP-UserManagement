@@ -5,4 +5,5 @@ public record AddSectionCommandRequest(
     string Name,
     string Description,
     string Url,
+    string Code,
     SectionType Type) : IRequest<SectionDto>;

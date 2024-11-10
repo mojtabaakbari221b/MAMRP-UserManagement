@@ -1,13 +1,12 @@
 ﻿using UserManagement.Application.ExternalServices.Identities.DTOs;
-using UserManagement.Domain.Services.DTOs;
 
-namespace UserManagement.Infrastructure.ExternalServices.Identities;
+namespace UserManagement.Infrastructure.ExternalServices.Identities.Tokens;
 
-public sealed class TokenFactory(IOptions<TokenOption> options, UserManager<User> userManager) : ITokenFactory
+public sealed class TokenFactory(IOptions<TokenOption> options, UserManagementDbContext context) : ITokenFactory
 {
     private readonly BearerTokenOption _optionBearer = options.Value.BearerTokenOption;
     private readonly RefreshTokenOption _optionsRefresh = options.Value.RefreshTokenOption;
-    private readonly UserManager<User> _userManager = userManager;
+    private readonly UserManagementDbContext _context = context;
 
     public async Task<TokenResult> CreateTokenAsync(Guid userId)
     {
@@ -32,9 +31,15 @@ public sealed class TokenFactory(IOptions<TokenOption> options, UserManager<User
             new("Id", id.ToString(), ClaimValueTypes.String, _optionBearer.Issuer),
         };
         // TODO: Add Section code in User token calim
-        var user = await _userManager.FindByIdAsync(id.ToString());
-        var userClaims = await _userManager.GetClaimsAsync(user!);
-        claims.AddRange(userClaims);
+        
+        var userSections = await _context.UserClaims.AsQueryable()
+            .Where(u => u.UserId == id)
+            .Select(s => new Claim(ClaimTypes.Role, s.Section.Code, ClaimValueTypes.String, _optionBearer.Issuer))
+            .ToListAsync();
+        
+        userSections.Add(new Claim(ClaimTypes.Role, SectionCode.MamRp01000, ClaimValueTypes.String, _optionBearer.Issuer));
+        
+        claims.AddRange(userSections);
         
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_optionBearer.Key));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

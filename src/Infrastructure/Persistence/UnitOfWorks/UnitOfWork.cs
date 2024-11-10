@@ -8,7 +8,7 @@ public class UnitOfWork(
     IUserManager users)
     : IUnitOfWork
 {
-    private IDbContextTransaction _transaction;
+    private IDbContextTransaction? _transaction;
     private readonly UserManagementDbContext _context = context;
 
     public IRoleManager Roles { get; } = roles;
@@ -28,9 +28,13 @@ public class UnitOfWork(
 
     public async Task CommitTransactionAsync(CancellationToken token = default)
     {
+        if (_transaction is null)
+        {
+            return;
+        }
         try
         {
-            await _transaction.CommitAsync(token);
+            await _transaction!.CommitAsync(token);
         }
         finally
         {
@@ -40,9 +44,13 @@ public class UnitOfWork(
 
     public async Task RoleBackTransactionAsync(CancellationToken token = default)
     {
+        if (_transaction is null)
+        {
+            return;
+        }
         try
         {
-            await _transaction.RollbackAsync(token);
+            await _transaction!.RollbackAsync(token);
         }
         finally
         {
@@ -52,6 +60,10 @@ public class UnitOfWork(
 
     private async Task DisposeTransactionAsync()
     {
+        if (_transaction is null)
+        {
+            return;
+        }
         await _transaction.DisposeAsync();
     }
 

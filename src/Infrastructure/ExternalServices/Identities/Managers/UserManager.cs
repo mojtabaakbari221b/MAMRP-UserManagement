@@ -1,7 +1,4 @@
-﻿using UserManagement.Domain.Services;
-using UserManagement.Domain.Services.DTOs;
-
-namespace UserManagement.Infrastructure.ExternalServices.Identities;
+﻿namespace UserManagement.Infrastructure.ExternalServices.Identities.Managers;
 
 public sealed class UserManager(
     SignInManager<User> signInManager,
@@ -18,17 +15,22 @@ public sealed class UserManager(
     {
         var result = await _signInManager.PasswordSignInAsync(username, password, false, lockoutOnFailure: false);
         var user = await _userManager.FindByNameAsync(username);
-        return new LoginResult(result.Succeeded, user!.Id);
+        return !result.Succeeded 
+            ? new LoginResult(result.Succeeded, Guid.Empty) 
+            : new LoginResult(result.Succeeded, user!.Id);
     }
 
-    public async Task Register(RegisterDto registerDto)
+    public async Task<RegisterLogin> Register(RegisterDto registerDto)
     {
         User user = new()
         {
+            UserName = registerDto.Username,
             Name = registerDto.Username,
             FamilyName = registerDto.FamilyName,
+            Email = registerDto.Username+"@Mam.com",
         };
-        await _userManager.CreateAsync(user, registerDto.Password);
+        var result = await _userManager.CreateAsync(user, registerDto.Password);
+        return new RegisterLogin(result.Succeeded);
     }
 
     public async Task RemoveUserRolesAndUserClaimsAsync(Guid userId)
@@ -58,13 +60,12 @@ public sealed class UserManager(
         return user?.Adapt<UserDto>();
     }
 
-    public Task SaveToken(TokenDto tokens)
+    public async Task SaveToken(TokenDto tokens)
     {
         UserToken token = new()
         {
-            t = tokens.AccessToken,
+            Value = tokens.AccessToken,
         };
-        _userManager.
     }
 
     // Refactor

@@ -1,4 +1,4 @@
-﻿namespace UserManagement.Infrastructure.ExternalServices.Identities;
+﻿namespace UserManagement.Infrastructure.ExternalServices.Identities.Managers;
 
 public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbContext context) : IRoleManager
 {

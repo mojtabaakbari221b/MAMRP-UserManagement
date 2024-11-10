@@ -1,4 +1,5 @@
-﻿using UserManagement.Domain.Services;
+﻿using UserManagement.Infrastructure.ExternalServices.Identities.Managers;
+using UserManagement.Infrastructure.ExternalServices.Identities.Tokens;
 
 namespace UserManagement.Infrastructure.ExternalServices;
 
@@ -16,10 +17,11 @@ public static class ConfigureServices
         
         services.Configure<IdentityOptions>(options =>
         {
-            options.User.RequireUniqueEmail = true;
+            // options.User.RequireUniqueEmail = true;
             options.User.AllowedUserNameCharacters =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         });
+        services.AddIdentityConfiguration(configuration);
         return services;
     }
 }
