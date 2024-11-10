@@ -65,6 +65,8 @@ public sealed class TokenFactory(IOptions<TokenOption> options, UserManager<User
             // custom data
             new("Id", id.ToString(), ClaimValueTypes.String, _optionsRefresh.Issuer),
             // add roles
+            // TODO : اینجا اگه لیست رو به شکل استرینگ برگردونیم ضایع نیستش؟
+            // new("Claims", [], ClaimValueTypes.)
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_optionsRefresh.Key));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

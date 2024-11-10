@@ -1,4 +1,7 @@
-﻿namespace UserManagement.Infrastructure.ExternalServices.Identities;
+﻿using UserManagement.Domain.Services;
+using UserManagement.Domain.Services.DTOs;
+
+namespace UserManagement.Infrastructure.ExternalServices.Identities;
 
 public sealed class UserManager(
     SignInManager<User> signInManager,

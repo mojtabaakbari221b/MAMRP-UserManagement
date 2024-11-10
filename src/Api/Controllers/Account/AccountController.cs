@@ -18,7 +18,7 @@ public sealed class AccountController(ISender sender) : ControllerBase
         return Result.Ok();
     }
     
-    [HttpGet("login")]
+    [HttpPost("login")]
     public async Task<Result<LoginQueryResponse>> Login(LoginQueryRequest request,
         CancellationToken token = default)
     {
