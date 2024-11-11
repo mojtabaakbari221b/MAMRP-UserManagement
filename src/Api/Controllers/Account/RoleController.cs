@@ -1,4 +1,6 @@
-﻿namespace UserManagement.Api.Controllers.Account;
+﻿using Share.Helper;
+
+namespace UserManagement.Api.Controllers.Account;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -7,6 +9,7 @@ public sealed class RoleController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpPost]
+    [Authorize(Policy = ServiceDeclaration.CreateRole)]
     public async Task<Result<AddRoleCommandResponse>> Post(AddRoleCommandRequest request,
         CancellationToken token = default)
     {
@@ -15,6 +18,7 @@ public sealed class RoleController(ISender sender) : ControllerBase
     }
 
     [HttpPut("{id:guid:required}")]
+    [Authorize(Policy = ServiceDeclaration.UpdateRole)]
     public async Task<Result> Put(Guid id, UpdateRoleDto model,
         CancellationToken token = default)
     {
@@ -24,6 +28,7 @@ public sealed class RoleController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{id:guid:required}")]
+    [Authorize(Policy = ServiceDeclaration.DeleteRole)]
     public async Task<Result> Delete(Guid id,
         CancellationToken token = default)
     {
@@ -32,6 +37,7 @@ public sealed class RoleController(ISender sender) : ControllerBase
     }
     
     [HttpGet]
+    [Authorize(Policy = ServiceDeclaration.GetAllRole)]
     public async Task<Result<IEnumerable<GetRoleQueryResponse>>> GetAll([FromQuery] GetAllRoleQueryRequest request, 
         CancellationToken token = default)
     {
@@ -40,6 +46,7 @@ public sealed class RoleController(ISender sender) : ControllerBase
     }
     
     [HttpGet("{id:guid:required}")]
+    [Authorize(Policy = ServiceDeclaration.GetByIdRole)]
     public async Task<Result<GetRoleQueryResponse>> Get(Guid id,
         CancellationToken token = default)
     {
