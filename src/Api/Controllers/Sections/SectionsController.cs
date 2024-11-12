@@ -1,4 +1,6 @@
-﻿namespace UserManagement.Api.Controllers.Sections;
+﻿using Share.Helper;
+
+namespace UserManagement.Api.Controllers.Sections;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -7,13 +9,15 @@ public class SectionsController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpGet]
+    [Authorize(Policy = ServiceDeclaration.GetAllSections)]
     public async Task<Result<IEnumerable<SectionDto>>> GetAll(CancellationToken token = default)
     {
         var responses = await _sender.Send(new GetAllSectionQueryRequest(), token);
         return Result.Ok(responses);
     }
 
-    [HttpGet("{id:long:required}")] 
+    [HttpGet("{id:long:required}")]
+    [Authorize(Policy = ServiceDeclaration.GetByIdSection)]
     public async Task<Result<SectionDto>> GetById(long id,
         CancellationToken token = default)
     {
@@ -22,6 +26,7 @@ public class SectionsController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{id:long:required}")]
+    [Authorize(Policy = ServiceDeclaration.DeleteSection)]
     public async Task<Result<bool>> Delete(long id,
         CancellationToken token = default)
     {
@@ -30,6 +35,7 @@ public class SectionsController(ISender sender) : ControllerBase
     }
 
     [HttpPut("{id:long:required}")]
+    [Authorize(Policy = ServiceDeclaration.UpdateSection)]
     public async Task<Result<bool>> Update(long id, UpdateSectionDto model,
         CancellationToken token = default)
     {
@@ -39,6 +45,7 @@ public class SectionsController(ISender sender) : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = ServiceDeclaration.CreateSection)]
     public async Task<Result<SectionDto>> Create(AddSectionCommandRequest request,
         CancellationToken token = default)
     {

@@ -2,13 +2,27 @@ namespace Share.Helper;
 
 public sealed class ServiceDeclaration
 {
-    public const  int Register = 1000;
-    public const  int Login = 1001;
-    public const  int ChangeUserRole = 1002;
-    public const  int ChangeRoleSectionClaim = 1003;
-    public const  int GetAllSections = 1004;
-    public const  int GetByIdSection = 1005;
-    public const  int DeleteSection = 1006;
-    public const  int UpdateSection = 1007;
-    public const  int CreateSection = 1008;
+    public const string Register = "010001";
+    public const string Login = "010002";
+    public const string ChangeUserRole = "010003";
+    public const string ChangeRoleSectionClaim = "010004";
+    
+    public const string CreateRole = "010005";
+    public const string UpdateRole = "010006";
+    public const string DeleteRole = "010007";
+    public const string GetAllRole = "010008";
+    public const string GetByIdRole = "010009";
+    
+    public const string GetAllSections = "010009";
+    public const string GetByIdSection = "010010";
+    public const string DeleteSection = "010011";
+    public const string UpdateSection = "010012";
+    public const string CreateSection = "010013";
+    
+    
+    public const string GetAllSectionGroup = "010014";
+    public const string GetByIdSectionGroup = "010015";
+    public const string DeleteSectionGroup = "010016";
+    public const string UpdateSectionGroup = "010017";
+    public const string CreateSectionGroup = "010018";
 }
