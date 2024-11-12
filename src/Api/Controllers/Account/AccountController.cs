@@ -42,4 +42,11 @@ public sealed class AccountController(ISender sender) : ControllerBase
         await _sender.Send(request);
         return Result.Ok();
     }
+    
+    [HttpPost("change-user-section-claim")]
+    [Authorize(Policy = ServiceDeclaration.ChangeUserSectionClaim)]
+    public async Task<Result> ChangeUserSectionClaim(ChangeSectionClaimOfRoleRequest request) {
+        await _sender.Send(request);
+        return Result.Ok();
+    }
 }
