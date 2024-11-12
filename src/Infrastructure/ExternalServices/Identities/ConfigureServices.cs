@@ -1,4 +1,6 @@
-﻿namespace UserManagement.Infrastructure.ExternalServices.Identities;
+﻿using UserManagement.Infrastructure.ExternalServices.Identities.Helper;
+
+namespace UserManagement.Infrastructure.ExternalServices.Identities;
 
 public static class ConfigureServices
 {
@@ -6,11 +8,16 @@ public static class ConfigureServices
     {
         var optionBearer = configuration.GetSection("BearerTokenOption").Get<BearerTokenOption>()!;
         var optionRefresh = configuration.GetSection("RefreshTokenOption").Get<RefreshTokenOption>()!;
-        
-        services.AddAuthorizationBuilder()
-            .AddPolicy(SectionCode.MamRp01000, policy => policy.RequireRole(SectionCode.MamRp01000))
-            .AddPolicy(SectionCode.MamRp02000, policy => policy.RequireRole(SectionCode.MamRp02000));
 
+        var declaratedServices = ConstantRetriever.GetConstants(typeof(ServiceDeclaration));
+        foreach (var service in declaratedServices)
+        {
+            services.AddAuthorizationBuilder().AddPolicy(
+                service.Value, 
+                policy => policy.RequireRole(service.Value)
+            );
+        }
+        
         // Needed for jwt auth.
         services.AddAuthentication(options =>
         {
