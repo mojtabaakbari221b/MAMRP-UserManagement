@@ -81,4 +81,20 @@ public sealed class UserManager(
 
         await _userManager.AddClaimsAsync(user, claims);
     }
+    
+    public async Task RemoveSectionClaimOfUserAsync(Guid userId)
+    {
+        await _context.UserClaims.Where(u => u.UserId == userId).ExecuteDeleteAsync();
+    }
+    
+    public async Task AddSectionIdsToUserClaimAsync(Guid userId, IEnumerable<long> sectionIds)
+    {
+        var userClaims = sectionIds.Select(sectionId => new UserClaim()
+        {
+            UserId = userId,
+            SectionId = sectionId
+        }).ToList();
+
+        await _context.UserClaims.AddRangeAsync(userClaims);
+    }
 }

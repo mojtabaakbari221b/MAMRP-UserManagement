@@ -8,4 +8,6 @@ public interface IUserManager
     Task RemoveUserRolesAndUserClaimsAsync(Guid userId);
     Task<UserDto?> GetUserById(string id);
     Task SaveToken(TokenDto tokens);
+    Task RemoveSectionClaimOfUserAsync(Guid userId);
+    Task AddSectionIdsToUserClaimAsync(Guid userId, IEnumerable<long> sectionIds);
 }
