@@ -10,6 +10,6 @@ public interface ISectionRepository
     void Delete(Section section);
     void Update(Section section);
     Task<Section?> FindAsync(long id, CancellationToken token = default);
-    Task<IEnumerable<IResponse>> List(CancellationToken token = default);
+    Task<IEnumerable<IResponse>> List(int pageSize, int pageNumber, CancellationToken token = default);
     Task<IResponse?> GetById(long id, CancellationToken token = default);
 }
