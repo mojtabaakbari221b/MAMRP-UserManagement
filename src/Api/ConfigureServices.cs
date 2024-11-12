@@ -15,7 +15,7 @@ public static class ConfigureServices
     {
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Liaro", Version = "v1" });
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Mamrp-UserManagement", Version = "v1" });
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
