@@ -1,15 +1,15 @@
-﻿namespace UserManagement.Application.ApplicationServices.Sections.Commands.Update;
+﻿namespace UserManagement.Application.ApplicationServices.Services.Commands.Update;
 
-public class UpdateSectionCommandHandler(IUnitOfWork uow) : IRequestHandler<UpdateSectionCommandRequest>
+public class UpdateServiceCommandHandler(IUnitOfWork uow) : IRequestHandler<UpdateServiceCommandRequest>
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public async Task Handle(UpdateSectionCommandRequest request, CancellationToken token)
+    public async Task Handle(UpdateServiceCommandRequest request, CancellationToken token)
     {
         var section = await _uow.Sections.FindAsync(request.Id, token)
                       ?? throw new InvalidOperationException();
 
-        section.Name = request.Name;
+        section.DisplayName = request.DisplayName;
         section.Description = request.Description;
         section.Url = request.Url;
         section.GroupId = request.GroupId;
