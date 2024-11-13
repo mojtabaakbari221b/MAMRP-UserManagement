@@ -48,7 +48,7 @@ public sealed class RoleController(ISender sender) : ControllerBase
     public async Task<Result<GetRoleQueryResponse>> Get(Guid id,
         CancellationToken token = default)
     {
-        var response = await _sender.Send(new GetRoleByIdQueryReqeust(id), token);
+        var response = await _sender.Send(new GetAllRoleQueryReqeust(id), token);
         return Result.Ok(response);
     }
 }

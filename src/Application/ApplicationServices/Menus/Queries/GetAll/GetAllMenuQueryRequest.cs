@@ -1,5 +1,5 @@
 ﻿using Share.QueryFilterings;
-using UserManagement.Application.ApplicationServices.Menus.Filterings;
+using UserManagement.Domain.Filterings;
 
 namespace UserManagement.Application.ApplicationServices.Menus.Queries.GetAll;
 

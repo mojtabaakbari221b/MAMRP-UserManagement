@@ -1,6 +1,6 @@
 using Share.Dtos;
 using Share.QueryFilterings;
-using UserManagement.Application.ApplicationServices.Services.Filterings;
+using UserManagement.Domain.Filterings;
 
 namespace UserManagement.Infrastructure.Persistence.Repositories;
 

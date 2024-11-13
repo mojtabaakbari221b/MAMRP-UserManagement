@@ -8,7 +8,7 @@ public sealed class GetAllRoleQueryHandler(IUnitOfWork uow)
     public async Task<IEnumerable<GetRoleQueryResponse>> Handle(GetAllRoleQueryRequest request,
         CancellationToken token)
     {
-        var responses = await _uow.Roles.GetAll(request.PageNumber, request.PageSize, token);
+        var responses = await _uow.Roles.GetAll(request.Pagination, request.Filtering, token);
         return responses.Adapt<IEnumerable<GetRoleQueryResponse>>();
     }
 }
