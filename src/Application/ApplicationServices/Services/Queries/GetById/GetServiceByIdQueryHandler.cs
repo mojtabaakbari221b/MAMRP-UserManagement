@@ -7,7 +7,7 @@ public class GetServiceByIdQueryHandler(IUnitOfWork uow)
 
     public async Task<ServiceDto> Handle(GetSectionByIdQueryRequest request, CancellationToken token)
     {
-        var response = await _uow.Sections.GetByIdService(request.Id, token)
+        var response = await _uow.Sections.GetById(request.Id, SectionType.Service, token)
                        ?? throw new ServiceNotFoundException();
 
         return response.Adapt<ServiceDto>();

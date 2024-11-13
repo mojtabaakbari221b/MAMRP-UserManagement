@@ -21,36 +21,23 @@ public sealed class SectionRepository(UserManagementDbContext context) : ISectio
         default) => await _context.Sections.AsQueryable()
         .Where(u => u.Id == id)
         .FirstOrDefaultAsync(token);
+    
+    public async Task<int> Count(SectionType type) => await _context.Sections.Where(c => c.Type == type).CountAsync();
 
-    public async Task<int> Count() => await _context.Sections.CountAsync();
-
-    public async Task<IEnumerable<IResponse>> GetAllServices(int pageNumber, int pageSize,
+    public async Task<IEnumerable<IResponse>> GetAll(int pageNumber, int pageSize,
+        SectionType type,
         CancellationToken token = default)
         => await _context.Sections.AsQueryable()
-            .Where(x => x.Type == SectionType.Service)
-            .Select(c => c.Adapt<ServiceDto>())
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync(token);
-
-    public async Task<IEnumerable<IResponse>> GetAllMenus(int pageNumber, int pageSize,
-        CancellationToken token = default)
-        => await _context.Sections.AsQueryable()
-            .Where(x => x.Type == SectionType.Menu)
+            .Where(x => x.Type == type)
             .Select(c => c.Adapt<MenuDto>())
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(token);
 
-    public async Task<IResponse?> GetByIdService(long id, CancellationToken token = default)
+    public async Task<IResponse?> GetById(long id, SectionType type, CancellationToken token = default)
         => await _context.Sections.AsQueryable()
+            .Where(c => c.Type == type)
             .Where(c => c.Id == id)
             .Select(c => c.Adapt<ServiceDto>())
-            .FirstOrDefaultAsync(token);
-
-    public async Task<IResponse?> GetByIdMenu(long id, CancellationToken token = default)
-        => await _context.Sections.AsQueryable()
-            .Where(c => c.Id == id)
-            .Select(c => c.Adapt<MenuDto>())
             .FirstOrDefaultAsync(token);
 }
