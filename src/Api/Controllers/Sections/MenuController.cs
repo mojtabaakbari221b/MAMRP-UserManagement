@@ -7,7 +7,7 @@ public sealed class MenuController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpPost]
-    public async Task<Result<MenuDto>> Post(AddMenuCommandReqeust reqeust,
+    public async Task<SuccessResponse<MenuDto>> Post(AddMenuCommandReqeust reqeust,
         CancellationToken token = default)
     {
         var result = await _sender.Send(reqeust, token);
@@ -15,7 +15,7 @@ public sealed class MenuController(ISender sender) : ControllerBase
     }
 
     [HttpPut("{id:long:required}")]
-    public async Task<Result> Put(long id, UpdateMenuDto model,
+    public async Task<SuccessResponse> Put(long id, UpdateMenuDto model,
         CancellationToken token = default)
     {
         var reqeust = UpdateMenuCommandRequest.Create(id, model);
@@ -24,17 +24,17 @@ public sealed class MenuController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{id:long:required}")]
-    public async Task<Result> Delete(long id, CancellationToken token = default)
+    public async Task<SuccessResponse> Delete(long id, CancellationToken token = default)
     {
         await _sender.Send(new DeleteMenuCommandRequest(id), token);
         return Result.Ok();
     }
 
     [HttpGet("{id:long:required}")]
-    public async Task<IActionResult> Get(long id, CancellationToken token = default)
+    public async Task<SuccessResponse<MenuDto>> Get(long id, CancellationToken token = default)
     {
         var result = await _sender.Send(new GetMenuByIdQueryRequest(id), token);
-        return Ok(Share.ResponseResult.Result.Ok(result));
+        return Result.Ok(result);
     }
 
     [HttpGet]
