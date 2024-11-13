@@ -1,7 +1,3 @@
-using Share.Helper;
-using UserManagement.Application.ApplicationServices.Account.Commands.Delete;
-using UserManagement.Application.ApplicationServices.Account.Commands.Update;
-
 namespace UserManagement.Api.Controllers.Account;
 
 
@@ -22,7 +18,7 @@ public sealed class AccountController(ISender sender) : ControllerBase
     
     [HttpPost("login")]
     [Authorize(Policy = ServiceDeclaration.Login)]
-    public async Task<Result<LoginQueryResponse>> Login(LoginQueryRequest request,
+    public async Task<Result<LoginCommandResponse>> Login(LoginCommandRequest request,
         CancellationToken token = default)
     {
         var result = await _sender.Send(request, token);

@@ -10,9 +10,11 @@ global using UserManagement.Application.ApplicationServices.Services.Queries.Get
 global using UserManagement.Application.ApplicationServices.Services.Commands.Delete;
 global using UserManagement.Application.ApplicationServices.Services.Commands.Update;
 global using UserManagement.Application.ApplicationServices.Services.Queries.GetAll;
+global using UserManagement.Application.ApplicationServices.Account.Commands.Delete;
+global using UserManagement.Application.ApplicationServices.Account.Commands.Update;
+global using UserManagement.Application.ApplicationServices.Account.Commands.Login;
 global using UserManagement.Application.ApplicationServices.Menus.Commands.Delete;
 global using UserManagement.Application.ApplicationServices.Menus.Commands.Update;
-global using UserManagement.Application.ApplicationServices.Account.Queries.Login;
 global using UserManagement.Application.ApplicationServices.Menus.Queries.GetById;
 global using UserManagement.Application.ApplicationServices.Roles.Commands.Delete;
 global using UserManagement.Application.ApplicationServices.Roles.Commands.Update;
