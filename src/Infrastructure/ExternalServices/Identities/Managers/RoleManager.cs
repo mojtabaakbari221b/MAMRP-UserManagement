@@ -31,7 +31,8 @@ public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbC
 
     public async Task RemoveSectionClaimOfRoleAsync(Guid roleId)
     {
-        await _context.RoleClaims.Where(u => u.RoleId == roleId).ExecuteDeleteAsync();
+        await _context.RoleClaims.Where(rc => rc.RoleId == roleId)
+            .ExecuteUpdateAsync(s => s.SetProperty(rc => rc.IsActive, false));
     }
 
     public async Task AddSectionIdsToRoleClaimAsync(Guid roleId, IEnumerable<long> sectionIds)
@@ -49,7 +50,7 @@ public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbC
     {
         await _context.Roles.AsQueryable()
             .Where(role => role.Id == roleId)
-            .ExecuteDeleteAsync();
+            .ExecuteUpdateAsync(s => s.SetProperty(r => r.IsActive, false));
     }
 
     public async Task Update(RoleDto roleDto)

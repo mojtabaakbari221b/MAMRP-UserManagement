@@ -47,11 +47,11 @@ public sealed class UserManager(
 
         await _context.UserRoles
             .Where(u => u.UserId == userId)
-            .ExecuteDeleteAsync();
+            .ExecuteUpdateAsync(s => s.SetProperty(ur => ur.IsActive, false));
 
         await _context.UserClaims
             .Where(uc => uc.UserId == userId && sectionIds.Contains(uc.SectionId))
-            .ExecuteDeleteAsync();
+            .ExecuteUpdateAsync(s => s.SetProperty(uc => uc.IsActive, true));
     }
 
     public async Task<UserDto?> GetUserById(string id)
@@ -88,10 +88,9 @@ public sealed class UserManager(
 
     public async Task Delete(Guid userId, CancellationToken token)
     {
-        //TODO: Add soft delete (ExcuteUpdate)
         await _context.Users.AsQueryable()
             .Where(u => u.Id == userId)
-            .ExecuteDeleteAsync(token);
+            .ExecuteUpdateAsync(s => s.SetProperty(a => a.IsActive, false) , token);
     }
 
     public async Task Update(UserDto userDto, CancellationToken token = default)
@@ -130,7 +129,8 @@ public sealed class UserManager(
     
     public async Task RemoveSectionClaimOfUserAsync(Guid userId)
     {
-        await _context.UserClaims.Where(u => u.UserId == userId).ExecuteDeleteAsync();
+        await _context.UserClaims.Where(u => u.UserId == userId)
+            .ExecuteUpdateAsync(s => s.SetProperty(uc => uc.IsActive, false));
     }
     
     public async Task AddSectionIdsToUserClaimAsync(Guid userId, IEnumerable<long> sectionIds)
