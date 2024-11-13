@@ -38,7 +38,7 @@ public sealed class SectionRepository(UserManagementDbContext context) : ISectio
         var query = _context.Sections.AsQueryable()
             .Where(x => x.Type == type);
 
-        query = QueryFilter.Filter(query, filtering as ServiceFiltering);
+        query = QueryFilter.Filter(query, filtering);
         
         var count = await query.CountAsync(token);
 
