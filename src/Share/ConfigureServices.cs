@@ -8,7 +8,7 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddShared(this IServiceCollection services)
     {
-        services.AddScoped<MamrpExceptionHandlingMiddleware>(); ;
+        services.AddScoped<MamrpExceptionHandlingMiddleware>();
         return services;
     }
 

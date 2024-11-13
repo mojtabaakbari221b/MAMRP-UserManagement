@@ -1,17 +1,9 @@
 namespace Share.Helper;
 
-public class PaginationResult<T>
+public class PaginationResult<T>(T data, int pageNumber, int pageSize, int totalRecords)
 {
-    public T Data { get; set; }
-    public int PageNumber { get; set; }
-    public int PageSize { get; set; }
-    public int TotalRecords { get; set; }
-
-    public PaginationResult(T data, int pageNumber, int pageSize, int totalRecords)
-    {
-        PageNumber = pageNumber;
-        PageSize = pageSize;
-        Data = data;
-        TotalRecords = totalRecords;
-    }
+    public T Data { get; set; } = data;
+    public int PageNumber { get; set; } = pageNumber;
+    public int PageSize { get; set; } = pageSize;
+    public int TotalRecords { get; set; } = totalRecords;
 }
