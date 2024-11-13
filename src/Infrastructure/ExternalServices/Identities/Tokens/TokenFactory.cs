@@ -12,7 +12,7 @@ public sealed class TokenFactory(IOptions<TokenOption> options, UserManagementDb
     {
         var accessToken = await CreateBearerAccessToken(userId);
         var refreshToken = CreateRefreshToken(userId);
-        return new TokenResult(accessToken, refreshToken);
+        return new TokenResult(accessToken, refreshToken, userId);
     }
 
     private async Task<string> CreateBearerAccessToken(Guid id)
@@ -33,8 +33,8 @@ public sealed class TokenFactory(IOptions<TokenOption> options, UserManagementDb
         // TODO: Add Section code in User token calim
         
         var userSections = await _context.UserClaims.AsQueryable()
-            .Where(u => u.UserId == id)
-            .Select(s => new Claim(ClaimTypes.Role, s.Section.Code, ClaimValueTypes.String, _optionBearer.Issuer))
+            .Where(u => u.UserId == id && u.Section.Type == SectionType.Service)
+            .Select(s => new Claim(ClaimTypes.Role, s.Section.Code!, ClaimValueTypes.String, _optionBearer.Issuer))
             .ToListAsync();
         
         userSections.Add(new Claim(ClaimTypes.Role, SectionCode.MamRp01000, ClaimValueTypes.String, _optionBearer.Issuer));
