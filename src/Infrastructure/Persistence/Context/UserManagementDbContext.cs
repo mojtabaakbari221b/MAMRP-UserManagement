@@ -1,6 +1,4 @@
-﻿using UserManagement.Infrastructure.ExternalServices.Identities.Helper;
-
-namespace UserManagement.Infrastructure.Persistence.Context;
+﻿namespace UserManagement.Infrastructure.Persistence.Context;
 
 public class UserManagementDbContext(DbContextOptions<UserManagementDbContext> options)
     : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>(options)
@@ -28,6 +26,7 @@ public class UserManagementDbContext(DbContextOptions<UserManagementDbContext> o
                     new Section
                     {
                         Name = service.Name,
+                        DisplayName = service.Name,
                         Url = $"/{service.Name}",
                         Description = service.Name,
                         Code = service.Value,

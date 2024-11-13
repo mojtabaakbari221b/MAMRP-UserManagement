@@ -1,6 +1,4 @@
-﻿using Share.Helper;
-
-namespace UserManagement.Api.Controllers.Account;
+﻿namespace UserManagement.Api.Controllers.Account;
 
 [ApiController]
 [Route("api/[controller]")]

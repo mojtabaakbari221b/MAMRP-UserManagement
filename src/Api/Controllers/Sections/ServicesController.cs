@@ -1,6 +1,4 @@
-﻿using Share.Helper;
-
-namespace UserManagement.Api.Controllers.Sections;
+﻿namespace UserManagement.Api.Controllers.Sections;
 
 
 [ApiController]
@@ -11,20 +9,10 @@ public sealed class ServicesController(ISender sender) : ControllerBase
 
     [HttpGet]
     [Authorize(Policy = ServiceDeclaration.GetAllSections)]
-    public async Task<Result<IEnumerable<ServiceDto>>> GetAll(int pageNumber, int pageSize,
-        CancellationToken token = default)
-    public async Task<Result<PaginationResult<IEnumerable<SectionDto>>>> GetAll([FromQuery] PaginationFilter filter, CancellationToken token = default)
+    public async Task<Result<PaginationResult<IEnumerable<ServiceDto>>>> GetAll([FromQuery] PaginationFilter filter, CancellationToken token = default)
     {
-        var responses = await _sender.Send(new GetAllServiceQueryRequest(pageNumber, pageSize), token);
+        var responses = await _sender.Send(new GetAllServiceQueryRequest(filter.PageNumber, filter.PageSize), token);
         return Result.Ok(responses);
-        var response = await _sender.Send(
-            new GetAllSectionQueryRequest(
-                filter.PageSize, 
-                filter.PageNumber
-            ),
-            token
-        );
-        return Result.Ok(response);
     }
 
     [HttpGet("{id:long:required}")]

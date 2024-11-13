@@ -2,9 +2,11 @@
 global using UserManagement.Application.ApplicationServices.SectionGroups.Queries.GetAll;
 global using UserManagement.Application.ApplicationServices.Account.Queries.GetById;
 global using UserManagement.Infrastructure.ExternalServices.Identities.Options;
+global using UserManagement.Infrastructure.ExternalServices.Identities.Helper;
 global using UserManagement.Infrastructure.ExternalServices.Identities.Tokens;
 global using UserManagement.Application.ApplicationServices.Roles.Queries;
 global using UserManagement.Application.ApplicationServices.Services.Dtos;
+global using UserManagement.Application.ApplicationServices.Menus.Dtos;
 global using UserManagement.Infrastructure.ExternalServices.Identities;
 global using UserManagement.Infrastructure.Persistence.Repositories;
 global using UserManagement.Application.ExternalServices.Identities;

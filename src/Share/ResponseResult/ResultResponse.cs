@@ -2,6 +2,6 @@
 
 public abstract class ResultResponse
 {
-    public bool IsSuccess { get; protected set; }
+    protected bool IsSuccess { get; init; }
     public bool IsFailed => !IsSuccess;
 }
