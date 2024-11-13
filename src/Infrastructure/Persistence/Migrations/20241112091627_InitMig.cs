@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UserManagement.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCodeInSectionMig : Migration
+    public partial class InitMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,7 +32,7 @@ namespace UserManagement.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FamilyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GeneratedCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -65,10 +65,10 @@ namespace UserManagement.Infrastructure.Persistence.Migrations
                     Type = table.Column<int>(type: "int", nullable: false),
                     RecordDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PersianRecordDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RegisteringUser = table.Column<long>(type: "bigint", nullable: false),
+                    RegisteringUser = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdateDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PersianUpdateDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdaterUser = table.Column<int>(type: "int", nullable: false),
+                    UpdaterUser = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -155,10 +155,10 @@ namespace UserManagement.Infrastructure.Persistence.Migrations
                     UserId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     RecordDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PersianRecordDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RegisteringUser = table.Column<long>(type: "bigint", nullable: false),
+                    RegisteringUser = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdateDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PersianUpdateDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdaterUser = table.Column<int>(type: "int", nullable: false),
+                    UpdaterUser = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -184,17 +184,18 @@ namespace UserManagement.Infrastructure.Persistence.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Url = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     GroupId = table.Column<long>(type: "bigint", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false),
                     RecordDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PersianRecordDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RegisteringUser = table.Column<long>(type: "bigint", nullable: false),
+                    RegisteringUser = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdateDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PersianUpdateDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdaterUser = table.Column<int>(type: "int", nullable: false),
+                    UpdaterUser = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserManagement.Infrastructure.Persistence.Context;
 
@@ -11,9 +12,11 @@ using UserManagement.Infrastructure.Persistence.Context;
 namespace UserManagement.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(UserManagementDbContext))]
-    partial class UserManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241112091627_InitMig")]
+    partial class InitMig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,13 +34,16 @@ namespace UserManagement.Infrastructure.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("GroupId")
                         .HasColumnType("bigint");
@@ -59,8 +65,8 @@ namespace UserManagement.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("RecordDatetime")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("RegisteringUser")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("RegisteringUser")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -68,8 +74,8 @@ namespace UserManagement.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("UpdateDatetime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UpdaterUser")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UpdaterUser")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -108,8 +114,8 @@ namespace UserManagement.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("RecordDatetime")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("RegisteringUser")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("RegisteringUser")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -117,8 +123,8 @@ namespace UserManagement.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("UpdateDatetime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UpdaterUser")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UpdaterUser")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -207,6 +213,10 @@ namespace UserManagement.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("GeneratedCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -216,10 +226,6 @@ namespace UserManagement.Infrastructure.Persistence.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -334,14 +340,14 @@ namespace UserManagement.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("RecordDatetime")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("RegisteringUser")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("RegisteringUser")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdateDatetime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UpdaterUser")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UpdaterUser")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
