@@ -1,4 +1,7 @@
-﻿namespace UserManagement.Application.ApplicationServices.Roles.Queries.GetById;
+﻿using Share.QueryFilterings;
+using UserManagement.Domain.Filterings;
 
-public sealed record GetAllRoleQueryRequest(int PageNumber, int PageSize)
+namespace UserManagement.Application.ApplicationServices.Roles.Queries.GetById;
+
+public sealed record GetAllRoleQueryRequest(PaginationFilter Pagination, RoleFiltering Filtering)
     : IRequest<IEnumerable<GetRoleQueryResponse>>;

@@ -1,4 +1,8 @@
-﻿namespace UserManagement.Infrastructure.ExternalServices.Identities.Managers;
+﻿using Share.QueryFilterings;
+using UserManagement.Application.ApplicationServices.Roles.Queries.GetAll;
+using UserManagement.Domain.Filterings;
+
+namespace UserManagement.Infrastructure.ExternalServices.Identities.Managers;
 
 public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbContext context) : IRoleManager
 {
@@ -59,10 +63,16 @@ public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbC
         await _roleManager.UpdateAsync(role);
     }
 
-    public async Task<IEnumerable<IResponse>> GetAll(int pageNumber, int pageSize, CancellationToken token = default)
-        => await _context.Roles.AsQueryable()
-            .Select(r => r.Adapt<GetRoleQueryResponse>())
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
+    public async Task<IEnumerable<IResponse>> GetAll(PaginationFilter pagination, RoleFiltering filtering,
+        CancellationToken token = default)
+    {
+        var query = _context.Roles.AsQueryable() ;
+
+        query = QueryFilter.Filter(query, filtering);
+
+        return await query.Select(r => r.Adapt<GetRoleQueryResponse>())
+            .Skip((pagination.PageNumber - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
             .ToListAsync(token);
+    }
 }

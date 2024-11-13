@@ -1,4 +1,7 @@
-﻿namespace UserManagement.Domain.Services;
+﻿using Share.QueryFilterings;
+using UserManagement.Domain.Filterings;
+
+namespace UserManagement.Domain.Services;
 
 public interface IRoleManager
 {
@@ -10,5 +13,5 @@ public interface IRoleManager
     Task AddSectionIdsToRoleClaimAsync(Guid roleId, IEnumerable<long> sectionIds);
     Task Delete(Guid roleId);
     Task Update(RoleDto roleDto);
-    Task<IEnumerable<IResponse>> GetAll(int pageNumber, int pageSize, CancellationToken token = default);
+    Task<IEnumerable<IResponse>> GetAll(PaginationFilter pagination, RoleFiltering filtering, CancellationToken token = default);
 }
