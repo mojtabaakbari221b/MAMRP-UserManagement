@@ -79,6 +79,10 @@ public class QueryFilter
         {
             operatorSymbol = "<";
         }
+        else if (value.Contains('%'))
+        {
+            operatorSymbol = "%";
+        }
         else
         {
             throw new ArgumentException("Invalid filter operator");
@@ -102,6 +106,7 @@ public class QueryFilter
             "<" => Expression.LessThan(property, constant),
             ">=" => Expression.GreaterThanOrEqual(property, constant),
             "<=" => Expression.LessThanOrEqual(property, constant),
+            "%" => Expression.Call(property, "Contains", null, constant),
             _ => throw new InvalidOperationException($"Operator {operatorSymbol} not supported")
         };
 
