@@ -1,4 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using Share.Helper;
 using UserManagement.Application.ApplicationServices.Sections.Dtos;
+using UserManagement.Domain.Entities;
+using UserManagement.Domain.Repositories;
+using UserManagement.Infrastructure.Persistence.Context;
 
 namespace UserManagement.Infrastructure.Persistence.Repositories;
 
@@ -36,4 +41,30 @@ public sealed class SectionRepository(UserManagementDbContext context): ISection
         return responses;
     }
 
+    public async Task<IEnumerable<IResponse>> GetAllServices(int pageNumber, int pageSize, CancellationToken token = default)
+        => await _context.Sections.AsQueryable()
+            .Where(x => x.Type == SectionType.Service)
+            .Select(c => c.Adapt<ServiceDto>())
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(token);
+
+    public async Task<IEnumerable<IResponse>> GetAllMenus(int pageNumber, int pageSize, CancellationToken token = default)
+        => await _context.Sections.AsQueryable()
+            .Where(x => x.Type == SectionType.Menu)
+            .Select(c => c.Adapt<MenuDto>())
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(token);
+
+    public async Task<IResponse?> GetByIdService(long id, CancellationToken token = default)
+        => await _context.Sections.AsQueryable()
+            .Where(c => c.Id == id)
+            .Select(c => c.Adapt<ServiceDto>())
+            .FirstOrDefaultAsync(token);
+    public async Task<IResponse?> GetByIdMenu(long id, CancellationToken token = default)
+        => await _context.Sections.AsQueryable()
+            .Where(c => c.Id == id)
+            .Select(c => c.Adapt<MenuDto>())
+            .FirstOrDefaultAsync(token);
 }

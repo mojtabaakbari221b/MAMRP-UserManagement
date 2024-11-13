@@ -1,3 +1,4 @@
 namespace UserManagement.Application.ApplicationServices.Roles.Exceptions;
 
-public class RoleNotFoundException() : MamrpBaseNotFoundException("نقش پیدا نشد.");
+public class RoleNotFoundException() 
+    : MamrpBaseNotFoundException("نقش پیدا نشد.", ServicesCode.UserManagement);

@@ -15,22 +15,22 @@ public sealed class UserManager(
     {
         var result = await _signInManager.PasswordSignInAsync(username, password, false, lockoutOnFailure: false);
         var user = await _userManager.FindByNameAsync(username);
-        return !result.Succeeded 
-            ? new LoginResult(result.Succeeded, Guid.Empty) 
+        return !result.Succeeded
+            ? new LoginResult(result.Succeeded, Guid.Empty)
             : new LoginResult(result.Succeeded, user!.Id);
     }
 
-    public async Task<RegisterLogin> Register(RegisterDto registerDto)
+    public async Task<RegisterResult> Register(RegisterDto registerDto)
     {
         User user = new()
         {
             UserName = registerDto.Username,
-            Name = registerDto.Username,
+            FirstName = registerDto.FirstName,
             FamilyName = registerDto.FamilyName,
-            Email = registerDto.Username+"@Mam.com",
+            Email = registerDto.Username + "@Mam.com",
         };
         var result = await _userManager.CreateAsync(user, registerDto.Password);
-        return new RegisterLogin(result.Succeeded);
+        return new RegisterResult(result.Succeeded);
     }
 
     public async Task RemoveUserRolesAndUserClaimsAsync(Guid userId)
@@ -65,8 +65,54 @@ public sealed class UserManager(
         UserToken token = new()
         {
             Value = tokens.AccessToken,
+            UserId = tokens.UserId,
         };
+        // UserRefreshToken refreshToken = new()
+        // {
+        //     UserId = tokens.UserId,
+        //     to
+        // };
+        _context.UserTokens.Add(token);
+        await _context.SaveChangesAsync();
     }
+
+    public async Task<bool> AnyAsync(Guid userId, CancellationToken token = default)
+        => await _userManager.Users.AsQueryable()
+            .AnyAsync(user => user.Id == userId, token);
+
+    public async Task<bool> AnyAsync(string userName, CancellationToken token = default)
+    {
+        return await _context.Users.AsQueryable()
+            .AnyAsync(user => user.NormalizedUserName == userName.ToUpper(), token);
+    }
+
+    public async Task Delete(Guid userId, CancellationToken token)
+    {
+        //TODO: Add soft delete (ExcuteUpdate)
+        await _context.Users.AsQueryable()
+            .Where(u => u.Id == userId)
+            .ExecuteDeleteAsync(token);
+    }
+
+    public async Task Update(UserDto userDto, CancellationToken token = default)
+    {
+        var user = await _userManager.Users.AsQueryable()
+            .FirstAsync(user => user.Id == userDto.UserId, token);
+        
+        user.UserName = user.UserName;
+        user.FirstName = userDto.FirstName;
+        user.FamilyName = userDto.FamilyName;
+        user.Email = userDto.UserName  + "@Mam.com";
+        
+        await _userManager.SetUserNameAsync(user, userDto.UserName);
+        await _userManager.SetEmailAsync(user, userDto.UserName + "@Mam.com");
+        await _userManager.UpdateAsync(user);
+    }
+
+    public async Task<IEnumerable<IResponse>> GetAll(int pageNumber, int pageSize, CancellationToken token = default)
+        => await _context.Users.AsQueryable()
+            .Select(u => u.Adapt<GetUserQueryResponse>())
+            .ToListAsync(token);
 
     // Refactor
     public async Task AddRoleAndTheirClaimsToUserAsync(UserDto userDto, RoleDto roleDto)

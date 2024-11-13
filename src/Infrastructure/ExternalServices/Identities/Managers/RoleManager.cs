@@ -1,7 +1,4 @@
-﻿using UserManagement.Application.ApplicationServices.Roles.Queries;
-using UserManagement.Application.ApplicationServices.Roles.Queries.GetById;
-
-namespace UserManagement.Infrastructure.ExternalServices.Identities.Managers;
+﻿namespace UserManagement.Infrastructure.ExternalServices.Identities.Managers;
 
 public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbContext context) : IRoleManager
 {

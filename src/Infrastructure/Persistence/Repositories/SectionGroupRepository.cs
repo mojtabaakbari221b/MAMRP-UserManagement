@@ -23,11 +23,7 @@ public class SectionGroupRepository(UserManagementDbContext context) : ISectionG
     public async Task<IEnumerable<IResponse>> ToList(int page, int size, SectionType type,
         CancellationToken token)
         => await _context.SectionGroups.AsQueryable()
-            .Select(s => new GetAllSectionGroupQueryResponse
-            (
-                s.Id,
-                s.Name
-            ))
+            .Select(s => s.Adapt<GetAllSectionGroupQueryResponse>())
             .Skip((page - 1) * size)
             .Take(size)
             .ToListAsync(token);

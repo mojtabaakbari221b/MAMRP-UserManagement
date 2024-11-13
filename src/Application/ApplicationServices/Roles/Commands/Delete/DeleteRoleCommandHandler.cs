@@ -1,6 +1,4 @@
-﻿using UserManagement.Application.ApplicationServices.Roles.Exceptions;
-
-namespace UserManagement.Application.ApplicationServices.Roles.Commands.Delete;
+﻿namespace UserManagement.Application.ApplicationServices.Roles.Commands.Delete;
 
 public sealed class DeleteRoleCommandHandler(IUnitOfWork uow)
     : IRequestHandler<DeleteRoleCommandRequest>

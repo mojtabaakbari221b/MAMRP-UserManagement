@@ -1,7 +1,3 @@
-using Share.Helper;
-using UserManagement.Application.ApplicationServices.UserRoles.Commands.ChangeSectionClaimOfRole;
-using UserManagement.Application.ApplicationServices.UserRoles.Commands.ChangeRoleOfUser;
-
 namespace UserManagement.Api.Controllers.Account;
 
 
@@ -22,11 +18,27 @@ public sealed class AccountController(ISender sender) : ControllerBase
     
     [HttpPost("login")]
     [Authorize(Policy = ServiceDeclaration.Login)]
-    public async Task<Result<LoginQueryResponse>> Login(LoginQueryRequest request,
+    public async Task<Result<LoginCommandResponse>> Login(LoginCommandRequest request,
         CancellationToken token = default)
     {
         var result = await _sender.Send(request, token);
         return Result.Ok(result);
+    }
+
+    [HttpPut("update-user")]
+    public async Task<Result> UpdateUser(Guid userId, UpdateUserDto model,
+        CancellationToken token = default)
+    {
+        var request = UpdateUserCommandRequest.Create(userId, model);
+        await _sender.Send(request, token);
+        return Result.Ok();
+    }
+    [HttpDelete("delete-user")]
+    public async Task<Result> DeleteUser(Guid userId, 
+        CancellationToken token = default)
+    {
+        await _sender.Send(new DeleteUserCommandRequest(userId), token);
+        return Result.Ok();
     }
 
     [HttpPost("change-user-role")]

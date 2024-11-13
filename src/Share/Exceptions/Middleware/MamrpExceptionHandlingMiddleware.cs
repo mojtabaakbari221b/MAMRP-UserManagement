@@ -1,4 +1,6 @@
-﻿namespace Share.Exceptions.Middleware;
+﻿using Share.ResponseResult;
+
+namespace Share.Exceptions.Middleware;
 
 public class MamrpExceptionHandlingMiddleware : IMiddleware
 {
@@ -26,33 +28,20 @@ public class MamrpExceptionHandlingMiddleware : IMiddleware
         {
             case MamrpBaseBadRequestException badRequestEx:
                 statusCode = (int)HttpStatusCode.BadRequest;
-                return new { IsSuccess = false, IsFailed = true, Message = badRequestEx.Message  };
+                return Result.Fail(badRequestEx.Message, badRequestEx.ServiceCode);
 
             case MamrpBaseNotFoundException notFoundEx:
                 statusCode = (int)HttpStatusCode.NotFound;
-                return new { IsSuccess = false, IsFailed = true, Message = notFoundEx.Message };
+                return Result.Fail(notFoundEx.Message, notFoundEx.ServiceCode);
 
             case MamrpValidationException validationEx:
                 statusCode = (int)HttpStatusCode.UnprocessableEntity;
-                return CreateValidationErrorResponse(validationEx);
+                return Result.FailValidation(validationEx);
 
             default:
                 statusCode = (int)HttpStatusCode.InternalServerError;
-                return new { IsFailed = true, Message = "An unexpected error occurred." };
+                return Result.Fail("An unexpected error occurred.", ServicesCode.UserManagement);
         }
     }
-
-    private object CreateValidationErrorResponse(MamrpValidationException ex)
-    {
-        var validationResult = Result.Fail("Validation Error")
-            .WithErrors(ex.Errors
-                .SelectMany(e => e.Value.Select(msg => new Error($"{e.Key}: {msg}"))));
-
-        return new
-        {
-            IsFailed = validationResult.IsFailed,
-            IsSuccess = validationResult.IsSuccess,
-            Errors = validationResult.Errors.Select(e => new { Message = e.Message }).ToArray()
-        };
-    }
+    
 }

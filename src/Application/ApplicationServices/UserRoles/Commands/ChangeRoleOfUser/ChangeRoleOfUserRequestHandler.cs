@@ -16,7 +16,7 @@ public sealed class ChangeRoleOfUserRequestHandler(IUnitOfWork uow) : IRequestHa
             throw new UserNotFoundException();
         }
 
-        await _uow.Users.RemoveUserRolesAndUserClaimsAsync(userDto.Id);
+        await _uow.Users.RemoveUserRolesAndUserClaimsAsync(userDto.UserId);
 
         var roleDto = await _uow.Roles.GetRoleById(request.RoleId);
         if (roleDto is null)

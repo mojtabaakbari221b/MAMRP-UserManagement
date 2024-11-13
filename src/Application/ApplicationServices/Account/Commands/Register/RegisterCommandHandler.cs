@@ -1,6 +1,4 @@
-﻿using UserManagement.Domain.Services.DTOs;
-
-namespace UserManagement.Application.ApplicationServices.Account.Commands.Register;
+﻿namespace UserManagement.Application.ApplicationServices.Account.Commands.Register;
 
 
 

@@ -22,8 +22,4 @@
     <ProjectReference Include="..\Share\Share.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ApplicationServices\Account\Queries\" />
-  </ItemGroup>
-
 </Project>
