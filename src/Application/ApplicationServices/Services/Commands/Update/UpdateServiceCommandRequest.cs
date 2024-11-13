@@ -7,11 +7,11 @@ public sealed record UpdateServiceCommandRequest(
     string DisplayName,
     string Description) : IRequest
 {
-    public static UpdateServiceCommandRequest Create(long id, UpdateSectionDto model)
+    public static UpdateServiceCommandRequest Create(long id, UpdateServiceDto model)
         => new(id, model.GroupId, model.Url, model.DisplayName, model.Description);
 }
 
-public sealed record UpdateSectionDto(
+public sealed record UpdateServiceDto(
     long GroupId,
     string Url,
     string DisplayName,
