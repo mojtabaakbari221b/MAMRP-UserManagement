@@ -4,7 +4,7 @@ public sealed class GetAllRoleQueryHandler(IUnitOfWork uow)
     : IRequestHandler<GetAllRoleQueryRequest, IEnumerable<GetRoleQueryResponse>>
 {
     private readonly IUnitOfWork _uow = uow;
-
+    // TODO : rename it
     public async Task<IEnumerable<GetRoleQueryResponse>> Handle(GetAllRoleQueryRequest request,
         CancellationToken token)
     {
