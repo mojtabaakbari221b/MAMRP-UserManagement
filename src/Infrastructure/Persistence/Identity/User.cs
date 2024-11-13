@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿namespace UserManagement.Infrastructure.Persistence.Identity;
 
-namespace UserManagement.Infrastructure.Persistence.Identity;
+
 
 public sealed class User : IdentityUser<Guid>
 {
@@ -9,7 +9,7 @@ public sealed class User : IdentityUser<Guid>
         GeneratedCode = Guid.NewGuid().ToString()[..8];
     }
 
-    public string Name { get; set; }
+    public string FirstName { get; set; }
     public string FamilyName { get; set; }
     public string GeneratedCode { get; set; }
 

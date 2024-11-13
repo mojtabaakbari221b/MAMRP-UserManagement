@@ -1,15 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿namespace UserManagement.Infrastructure.Persistence.Identity;
 
-namespace UserManagement.Infrastructure.Persistence.Identity;
 
 public class Role : IdentityRole<Guid>
 {
-    public Role()
-    {
-        CreatedDate = DateTime.Now;
-    }
-
-    public string DisplayName { get; set; }
-    public DateTime CreatedDate { get; set; }
-
+    public required string DisplayName { get; set; }
+    public DateTime CreatedDate { get; init; } = DateTime.Now;
 }
