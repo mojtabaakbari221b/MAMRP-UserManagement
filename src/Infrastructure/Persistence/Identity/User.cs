@@ -14,5 +14,5 @@ public sealed class User : IdentityUser<Guid>
     public string GeneratedCode { get; set; }
 
     public ICollection<UserRefreshToken> UserRefreshTokens { get; set; } = [];
-
+    public bool IsActive { get; set; } = true;
 }

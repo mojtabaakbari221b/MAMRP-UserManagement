@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace UserManagement.Infrastructure.Persistence.Identity;
+﻿namespace UserManagement.Infrastructure.Persistence.Identity;
 
 public class UserToken : IdentityUserToken<Guid>
 {
@@ -10,5 +8,6 @@ public class UserToken : IdentityUserToken<Guid>
     }
 
     public DateTime GeneratedTime { get; set; }
+    public bool IsActive { get; set; } = true;
 
 }

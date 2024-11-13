@@ -8,6 +8,6 @@ public class UserLogin : IdentityUserLogin<Guid>
     {
         LoggedOn = DateTime.Now;
     }
-
     public DateTime LoggedOn { get; set; }
+    public bool IsActive { get; set; } = true;
 }

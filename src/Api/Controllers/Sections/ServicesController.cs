@@ -8,7 +8,7 @@ public sealed class ServicesController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpGet]
-    [Authorize(Policy = ServiceDeclaration.GetAllSections)]
+    [Authorize(Policy = ServiceDeclaration.GetAllServices)]
     public async Task<Result<PaginationResult<IEnumerable<ServiceDto>>>> GetAll([FromQuery] PaginationFilter filter, CancellationToken token = default)
     {
         var responses = await _sender.Send(new GetAllServiceQueryRequest(filter.PageNumber, filter.PageSize), token);
@@ -16,7 +16,7 @@ public sealed class ServicesController(ISender sender) : ControllerBase
     }
 
     [HttpGet("{id:long:required}")]
-    [Authorize(Policy = ServiceDeclaration.GetByIdSection)]
+    [Authorize(Policy = ServiceDeclaration.GetByIdService)]
     public async Task<Result<ServiceDto>> GetById(long id,
         CancellationToken token = default)
     {
@@ -25,7 +25,7 @@ public sealed class ServicesController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{id:long:required}")]
-    [Authorize(Policy = ServiceDeclaration.DeleteSection)]
+    [Authorize(Policy = ServiceDeclaration.DeleteService)]
     public async Task<Result<bool>> Delete(long id,
         CancellationToken token = default)
     {
@@ -34,7 +34,7 @@ public sealed class ServicesController(ISender sender) : ControllerBase
     }
 
     [HttpPut("{id:long:required}")]
-    [Authorize(Policy = ServiceDeclaration.UpdateSection)]
+    [Authorize(Policy = ServiceDeclaration.UpdateService)]
     public async Task<Result<bool>> Update(long id, UpdateServiceDto model,
         CancellationToken token = default)
     {

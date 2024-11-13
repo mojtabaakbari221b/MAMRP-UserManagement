@@ -7,4 +7,5 @@ public class RoleClaim : IdentityRoleClaim<Guid>
 {
     public long SectionId { get; set; }
     public Section Section { get; set; } = default!;
+    public bool IsActive { get; set; } = true;
 }

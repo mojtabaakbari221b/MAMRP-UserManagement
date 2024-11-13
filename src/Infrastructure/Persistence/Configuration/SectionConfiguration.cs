@@ -17,7 +17,7 @@ public class SectionConfiguration : IEntityTypeConfiguration<Section>
         builder.Property(s => s.Description)
             .IsRequired()
             .HasMaxLength(500);
-        
+
         builder.Property(s => s.Type)
             .HasConversion<int>()
             .IsRequired();
@@ -26,5 +26,9 @@ public class SectionConfiguration : IEntityTypeConfiguration<Section>
             .WithMany()
             .HasForeignKey(s => s.GroupId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder
+            .Property(s => s.Id)
+            .ValueGeneratedOnAdd();
     }
 }

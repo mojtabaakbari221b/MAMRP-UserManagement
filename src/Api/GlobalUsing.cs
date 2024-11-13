@@ -26,6 +26,7 @@ global using UserManagement.Application.ApplicationServices.Roles.Commands.Add;
 global using UserManagement.Application.ApplicationServices.Services.Dtos;
 global using UserManagement.Application.ApplicationServices.Roles.Queries;
 global using UserManagement.Application.ApplicationServices.Menus.Dtos;
+global using UserManagement.Infrastructure.Persistence;
 global using Microsoft.AspNetCore.Authorization;
 global using UserManagement.Infrastructure;
 global using UserManagement.Application;

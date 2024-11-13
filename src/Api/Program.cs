@@ -10,6 +10,8 @@ var services = builder.Services;
 }
 var app = builder.Build();
 {
+    app.UseSeedingData();
+    
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
