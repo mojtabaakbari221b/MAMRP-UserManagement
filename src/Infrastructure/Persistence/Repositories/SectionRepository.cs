@@ -1,6 +1,5 @@
 using UserManagement.Application.ApplicationServices.Sections.Dtos;
 
-
 namespace UserManagement.Infrastructure.Persistence.Repositories;
 
 public sealed class SectionRepository(UserManagementDbContext context): ISectionRepository {
@@ -26,9 +25,15 @@ public sealed class SectionRepository(UserManagementDbContext context): ISection
         .Select(c => new SectionDto(c.Id, c.GroupId, c.Name, c.Url, c.Code, c.Description, c.Type))
         .FirstOrDefaultAsync(token);
 
-    public async Task < IEnumerable < IResponse >> List(int pageSize, int pageNumber, CancellationToken token =
-        default) => await _context.Sections.Skip((pageNumber - 1) * pageSize).Take(pageSize).AsQueryable()
-        .Select(c => new SectionDto(c.Id, c.GroupId, c.Name, c.Url, c.Code, c.Description, c.Type))
-        .ToListAsync(token);
+    public async Task<int> Count() => await _context.Sections.CountAsync();
+
+    public async Task<IEnumerable<IResponse>> List(int pageSize, int pageNumber, CancellationToken token =
+        default)
+    {
+        var responses = await _context.Sections.Skip((pageNumber - 1) * pageSize).Take(pageSize).AsQueryable()
+            .Select(c => new SectionDto(c.Id, c.GroupId, c.Name, c.Url, c.Code, c.Description, c.Type))
+            .ToListAsync(token);
+        return responses;
+    }
 
 }

@@ -12,4 +12,5 @@ public interface ISectionRepository
     Task<Section?> FindAsync(long id, CancellationToken token = default);
     Task<IEnumerable<IResponse>> List(int pageSize, int pageNumber, CancellationToken token = default);
     Task<IResponse?> GetById(long id, CancellationToken token = default);
+    Task<int> Count();
 }

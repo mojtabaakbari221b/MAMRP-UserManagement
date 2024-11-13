@@ -1,4 +1,4 @@
-namespace UserManagement.Application.Common;
+namespace Share.Helper;
 
 public class PaginationResult<T>
 {

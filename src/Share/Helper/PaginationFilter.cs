@@ -1,4 +1,4 @@
-namespace UserManagement.Api.Common;
+namespace Share.Helper;
 
 public class PaginationFilter
 {
