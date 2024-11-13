@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Share.QueryFilterings.Exceptions;
 
 namespace Share.QueryFilterings;
 
@@ -85,14 +86,14 @@ public class QueryFilter
         }
         else
         {
-            throw new ArgumentException("Invalid filter operator");
+            throw new InvalidFilterOperationException();
         }
         
 
         var conditionParts = value.Split(new string[] { operatorSymbol }, StringSplitOptions.None);
         if (conditionParts.Length != 2)
         {
-            throw new ArgumentException("Invalid filter condition format");
+            throw new InvalidFilterOperationException();
         }
 
         var property = Expression.Property(parameter, propertyName);
@@ -107,7 +108,7 @@ public class QueryFilter
             ">=" => Expression.GreaterThanOrEqual(property, constant),
             "<=" => Expression.LessThanOrEqual(property, constant),
             "%" => Expression.Call(property, "Contains", null, constant),
-            _ => throw new InvalidOperationException($"Operator {operatorSymbol} not supported")
+            _ => throw new InvalidFilterOperationException()
         };
 
         return comparison;
