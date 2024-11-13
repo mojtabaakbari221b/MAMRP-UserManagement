@@ -1,3 +1,3 @@
 ﻿namespace UserManagement.Domain.Services.DTOs;
 
-public sealed record TokenDto(string AccessToken, string RefreshToken);
+public sealed record TokenDto(string AccessToken, string RefreshToken, Guid UserId);
