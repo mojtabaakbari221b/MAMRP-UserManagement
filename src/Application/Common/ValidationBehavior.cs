@@ -26,7 +26,7 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidat
 
         if (failures.Count != 0)
         {
-            throw new MamrpValidationException(failures);
+            throw new MamrpValidationException(failures, ServicesCode.UserManagement);
         }
 
         return await next();
