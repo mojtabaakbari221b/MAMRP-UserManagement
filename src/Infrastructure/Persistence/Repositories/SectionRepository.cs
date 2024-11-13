@@ -1,3 +1,7 @@
+using Share.Dtos;
+using Share.QueryFilterings;
+using UserManagement.Application.ApplicationServices.Services.Filterings;
+
 namespace UserManagement.Infrastructure.Persistence.Repositories;
 
 public sealed class SectionRepository(UserManagementDbContext context) : ISectionRepository
@@ -24,15 +28,28 @@ public sealed class SectionRepository(UserManagementDbContext context) : ISectio
     
     public async Task<int> Count(SectionType type) => await _context.Sections.Where(c => c.Type == type).CountAsync();
 
-    public async Task<IEnumerable<IResponse>> GetAll(int pageNumber, int pageSize,
+    public async Task<ListDto> GetAll(
+        PaginationFilter pagination,
+        object filtering,
         SectionType type,
-        CancellationToken token = default)
-        => await _context.Sections.AsQueryable()
-            .Where(x => x.Type == type)
-            .Select(c => c.Adapt<MenuDto>())
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync(token);
+        CancellationToken token = default
+    )
+    {
+        var query = _context.Sections.AsQueryable()
+            .Where(x => x.Type == type);
+
+        query = QueryFilter.Filter(query, filtering as ServiceFiltering);
+        
+        var count = await query.CountAsync(token);
+
+        return new ListDto(
+            count,
+            await query.Select(c => c.Adapt<MenuDto>())
+                .Skip((pagination.PageNumber - 1) * pagination.PageSize)
+                .Take(pagination.PageSize)
+                .ToListAsync(token)
+        );
+    }
 
     public async Task<IResponse?> GetById(long id, SectionType type, CancellationToken token = default)
         => await _context.Sections.AsQueryable()
@@ -40,4 +57,4 @@ public sealed class SectionRepository(UserManagementDbContext context) : ISectio
             .Where(c => c.Id == id)
             .Select(c => c.Adapt<ServiceDto>())
             .FirstOrDefaultAsync(token);
-}
+    }

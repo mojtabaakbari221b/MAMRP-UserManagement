@@ -38,10 +38,10 @@ public sealed class MenuController(ISender sender) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get(int pageNumber, int pageSize,
+    public async Task<IActionResult> Get([FromQuery] GetAllMenuQueryRequest request,
         CancellationToken token = default)
     {
-        var results = await _sender.Send(new GetAllMenuQueryRequest(pageNumber, pageNumber), token);
+        var results = await _sender.Send(request, token);
         return Ok(Share.ResponseResult.Result.Ok(results));
     }
 }
