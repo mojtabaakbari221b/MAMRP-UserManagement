@@ -8,7 +8,4 @@ public sealed class FailureValidationRespobse : ResultResponse
         ServiceCode = serviceCode;
         IsSuccess = false;
     }
-
-    public IDictionary<string, string[]> Errors { get; private set; }
-    public string ServiceCode { get; private set; }
 }

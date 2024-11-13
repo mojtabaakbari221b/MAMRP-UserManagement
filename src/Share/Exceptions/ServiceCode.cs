@@ -2,6 +2,6 @@
 
 public static class ServicesCode
 {
-    public const string UserManagement = "MamRp_UserManagement_1000";
+    public const string UserManagement = "MamRp_UserManagement_01";
     
 }

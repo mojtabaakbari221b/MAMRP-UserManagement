@@ -1,6 +1,4 @@
-﻿using Share.ResponseResult;
-
-namespace Share.Exceptions.Middleware;
+﻿namespace Share.Exceptions.Middleware;
 
 public class MamrpExceptionHandlingMiddleware : IMiddleware
 {
