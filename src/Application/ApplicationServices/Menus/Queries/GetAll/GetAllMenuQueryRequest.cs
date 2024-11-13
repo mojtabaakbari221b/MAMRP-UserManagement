@@ -1,4 +1,7 @@
-﻿namespace UserManagement.Application.ApplicationServices.Menus.Queries.GetAll;
+﻿using Share.QueryFilterings;
+using UserManagement.Application.ApplicationServices.Menus.Filterings;
 
-public sealed record GetAllMenuQueryRequest(int PageNumber, int PageSize) 
+namespace UserManagement.Application.ApplicationServices.Menus.Queries.GetAll;
+
+public sealed record GetAllMenuQueryRequest(PaginationFilter Pagination, MenuFiltering Filtering) 
     : IRequest<IEnumerable<MenuDto>>;

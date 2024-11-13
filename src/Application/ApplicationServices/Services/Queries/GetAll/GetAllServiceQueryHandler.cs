@@ -1,4 +1,6 @@
-﻿namespace UserManagement.Application.ApplicationServices.Services.Queries.GetAll;
+﻿using Share.QueryFilterings;
+
+namespace UserManagement.Application.ApplicationServices.Services.Queries.GetAll;
 
 public class GetAllServiceQueryHandler(IUnitOfWork uow)
     : IRequestHandler<GetAllServiceQueryRequest, PaginationResult<IEnumerable<ServiceDto>>>
@@ -7,13 +9,13 @@ public class GetAllServiceQueryHandler(IUnitOfWork uow)
 
     public async Task<PaginationResult<IEnumerable<ServiceDto>>> Handle(GetAllServiceQueryRequest request, CancellationToken token)
     {
-       var response =  await _uow.Sections.GetAllServices(request.PageNumber, request.PageSize, token);
+       var listDto =  await _uow.Sections.GetAll(request.Pagination, request.Filtering , SectionType.Service, token);
        return new PaginationResult<IEnumerable<ServiceDto>>
        (
-            response.Adapt<IEnumerable<ServiceDto>>(),
-           request.PageNumber,
-           request.PageSize,
-           1
+            data: listDto.Responses.Adapt<IEnumerable<ServiceDto>>(),
+           pageNumber: request.Pagination.PageNumber,
+           pageSize: request.Pagination.PageSize,
+           totalRecords: listDto.Count
        );
     }
 }

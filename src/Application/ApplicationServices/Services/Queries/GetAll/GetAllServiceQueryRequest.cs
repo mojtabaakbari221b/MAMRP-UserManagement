@@ -1,4 +1,7 @@
-﻿namespace UserManagement.Application.ApplicationServices.Services.Queries.GetAll;
+﻿using Share.QueryFilterings;
+using UserManagement.Application.ApplicationServices.Services.Filterings;
 
-public record GetAllServiceQueryRequest(int PageNumber, int PageSize) 
+namespace UserManagement.Application.ApplicationServices.Services.Queries.GetAll;
+
+public record GetAllServiceQueryRequest(PaginationFilter Pagination, ServiceFiltering Filtering) 
     : IRequest<PaginationResult<IEnumerable<ServiceDto>>>;

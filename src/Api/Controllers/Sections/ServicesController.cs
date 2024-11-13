@@ -9,9 +9,9 @@ public sealed class ServicesController(ISender sender) : ControllerBase
 
     [HttpGet]
     [Authorize(Policy = ServiceDeclaration.GetAllServices)]
-    public async Task<Result<PaginationResult<IEnumerable<ServiceDto>>>> GetAll([FromQuery] PaginationFilter filter, CancellationToken token = default)
+    public async Task<Result<PaginationResult<IEnumerable<ServiceDto>>>> GetAll([FromQuery] GetAllServiceQueryRequest request, CancellationToken token = default)
     {
-        var responses = await _sender.Send(new GetAllServiceQueryRequest(filter.PageNumber, filter.PageSize), token);
+        var responses = await _sender.Send(request, token);
         return Result.Ok(responses);
     }
 

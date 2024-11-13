@@ -1,4 +1,4 @@
-namespace Share.Helper;
+namespace Share.QueryFilterings;
 
 public class PaginationResult<T>(T data, int pageNumber, int pageSize, int totalRecords)
 {
