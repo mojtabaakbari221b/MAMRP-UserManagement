@@ -26,6 +26,7 @@ public sealed class AccountController(ISender sender) : ControllerBase
     }
 
     [HttpPut("update-user")]
+    [Authorize(Policy = ServiceDeclaration.UpdateUser)]
     public async Task<SuccessResponse> UpdateUser(Guid userId, UpdateUserDto model,
         CancellationToken token = default)
     {
@@ -34,6 +35,7 @@ public sealed class AccountController(ISender sender) : ControllerBase
         return Result.Ok();
     }
     [HttpDelete("delete-user")]
+    [Authorize(Policy = ServiceDeclaration.DeleteUser)]
     public async Task<SuccessResponse> DeleteUser(Guid userId, 
         CancellationToken token = default)
     {
