@@ -4,7 +4,6 @@ namespace Share.Ordering;
 
 public class QueryOrdering
 {
-    // متد برای اعمال مرتب‌سازی داینامیک
     public static IQueryable<T> ApplyOrdering<T>(IQueryable<T> query, object? orderBy)
     {
         if (orderBy == null)
@@ -12,9 +11,7 @@ public class QueryOrdering
             return query;
         }
 
-        // ساخت پارامتر برای مدل داده‌ای T
         var parameter = Expression.Parameter(typeof(T), "x");
-
         IOrderedQueryable<T>? orderedQuery = null;
 
         // دریافت ویژگی‌های کلاس مرتب‌سازی
@@ -27,7 +24,7 @@ public class QueryOrdering
             // اگر مقدار فیلد null نباشد و مشخصات مرتب‌سازی معتبر باشند، مرتب‌سازی را اعمال می‌کنیم
             if (value == null) continue;
             var direction = value.Contains("ASC", StringComparison.OrdinalIgnoreCase) ? "ASC" : "DESC";
-            var propertyName = value.Split(' ')[0]; // فرض بر این است که first part propertyName است
+            var propertyName = property.Name; // نام ویژگی خود کلاس مرتب‌سازی (مثلاً "Name" یا "Age")
 
             // ساخت Expression برای ویژگی مورد نظر
             var propertyInfo = typeof(T).GetProperty(propertyName);
