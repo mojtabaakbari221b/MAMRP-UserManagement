@@ -7,6 +7,7 @@ public sealed class MenuController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpPost]
+    [Authorize(Policy = ServiceDeclaration.CreateMenus)]
     public async Task<SuccessResponse<MenuDto>> Post(AddMenuCommandReqeust reqeust,
         CancellationToken token = default)
     {
@@ -15,6 +16,7 @@ public sealed class MenuController(ISender sender) : ControllerBase
     }
 
     [HttpPut("{id:long:required}")]
+    [Authorize(Policy = ServiceDeclaration.UpdateMenus)]
     public async Task<SuccessResponse> Put(long id, UpdateMenuDto model,
         CancellationToken token = default)
     {
@@ -24,6 +26,7 @@ public sealed class MenuController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{id:long:required}")]
+    [Authorize(Policy = ServiceDeclaration.DeleteMenus)]
     public async Task<SuccessResponse> Delete(long id, CancellationToken token = default)
     {
         await _sender.Send(new DeleteMenuCommandRequest(id), token);
@@ -31,6 +34,7 @@ public sealed class MenuController(ISender sender) : ControllerBase
     }
 
     [HttpGet("{id:long:required}")]
+    [Authorize(Policy = ServiceDeclaration.GetByIdMenus)]
     public async Task<SuccessResponse<MenuDto>> Get(long id, CancellationToken token = default)
     {
         var result = await _sender.Send(new GetMenuByIdQueryRequest(id), token);
@@ -38,6 +42,7 @@ public sealed class MenuController(ISender sender) : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = ServiceDeclaration.GetAllMenus)]
     public async Task<SuccessResponse<PaginationResult<IEnumerable<MenuDto>>>> Get([FromQuery] GetAllMenuQueryRequest request,
         CancellationToken token = default)
     {

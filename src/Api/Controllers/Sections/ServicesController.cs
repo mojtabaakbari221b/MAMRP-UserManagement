@@ -10,7 +10,7 @@ public sealed class ServicesController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpGet]
-    // [Authorize(Policy = ServiceDeclaration.GetAllServices)]
+    [Authorize(Policy = ServiceDeclaration.GetAllServices)]
     public async Task<SuccessResponse<PaginationResult<IEnumerable<ServiceDto>>>> GetAll([FromQuery] GetAllServiceQueryRequest request, 
         CancellationToken token = default)
     {
@@ -19,7 +19,7 @@ public sealed class ServicesController(ISender sender) : ControllerBase
     }
 
     [HttpGet("{id:long:required}")]
-    // [Authorize(Policy = ServiceDeclaration.GetByIdService)]
+    [Authorize(Policy = ServiceDeclaration.GetByIdService)]
     public async Task<SuccessResponse<ServiceDto>> GetById(long id,
         CancellationToken token = default)
     {
