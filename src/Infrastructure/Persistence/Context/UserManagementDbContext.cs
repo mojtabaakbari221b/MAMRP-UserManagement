@@ -10,6 +10,8 @@ public class UserManagementDbContext(DbContextOptions<UserManagementDbContext> o
     {
         base.OnConfiguring(optionsBuilder);
         optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
+        optionsBuilder.AddInterceptors(new FillBaseEntityValuesOnUpdatingInterceptor());
+        optionsBuilder.AddInterceptors(new FillBaseEntityValuesOnCreatingInterceptor());
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
