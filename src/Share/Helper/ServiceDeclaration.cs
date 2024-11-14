@@ -21,10 +21,7 @@ public sealed class ServiceDeclaration
     public const string DeleteMenus = "010017";
     public const string UpdateMenus = "010018";
     public const string CreateMenus = "010019";
-    public const string GetAllSectionGroup = "010020";
-    public const string GetByIdSectionGroup = "010021";
-    public const string DeleteSectionGroup = "010022";
-    public const string UpdateSectionGroup = "010023";
-    public const string CreateSectionGroup = "010024";
     public const string ChangeUserSectionClaim = "010025";
+    public const string UpdateUser = "010026";
+    public const string DeleteUser = "010027";
 }
