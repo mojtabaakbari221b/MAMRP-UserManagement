@@ -9,11 +9,17 @@ public sealed class AddRoleCommandHandler(IUnitOfWork uow)
 
     public async Task<AddRoleCommandResponse> Handle(AddRoleCommandRequest request, CancellationToken cancellationToken)
     {
-        if (await _uow.Roles.RoleExistsAsync(request.RoleName))
+        var isExsit = await _uow.Roles.RoleExistsAsync(request.RoleName);
+        if (isExsit.IsSuccess)
         {
             throw new RoleAlredyExistException();
         }
-        await _uow.Roles.AddRole(request.RoleName, request.DisplayName);
+        
+        var result = await _uow.Roles.AddRole(request.RoleName, request.DisplayName);
+        if (!result.IsSuccess)
+        {
+            throw new RoleNotAddedException(result.Errors);
+        }
         return request.Adapt<AddRoleCommandResponse>();
     }
 }

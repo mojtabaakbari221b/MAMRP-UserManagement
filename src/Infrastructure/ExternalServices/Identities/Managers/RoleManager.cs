@@ -1,15 +1,9 @@
-﻿using Share.QueryFilterings;
-using UserManagement.Application.ApplicationServices.Roles.Queries.GetAll;
-using UserManagement.Domain.Filterings;
+﻿namespace UserManagement.Infrastructure.ExternalServices.Identities.Managers;
 
-namespace UserManagement.Infrastructure.ExternalServices.Identities.Managers;
-
-public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbContext context) : IRoleManager
+public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbContext context)
+    : IRoleManager
 {
-    private readonly RoleManager<Role> _roleManager = roleManager;
-    private readonly UserManagementDbContext _context = context;
-
-    public async Task AddRole(string roleName, string displayName)
+    public async Task<OperationResult> AddRole(string roleName, string displayName)
     {
         Role role = new()
         {
@@ -17,29 +11,45 @@ public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbC
             DisplayName = displayName
         };
 
-        await _roleManager.CreateAsync(role);
+        var result = await roleManager.CreateAsync(role);
+        return result.Succeeded
+            ? OperationResult.Success()
+            : OperationResult.Failure(result.Errors.Select(e => e.Description).ToList(), ErrorType.Errors);
     }
 
-    public async Task<bool> RoleExistsAsync(string roleName)
-        => await _roleManager.RoleExistsAsync(roleName);
+    public async Task<OperationResult> RoleExistsAsync(string roleName)
+    {
+        var exists = await roleManager.RoleExistsAsync(roleName);
+        return exists ? OperationResult.Success() : OperationResult.Failure(ErrorType.NotFound);
+    }
 
-    public async Task<bool> RoleExistsAsync(Guid roleId)
-        => await _context.Roles.AsQueryable()
+    public async Task<OperationResult> RoleExistsAsync(Guid roleId)
+    {
+        var exists = await context.Roles.AsQueryable()
             .AnyAsync(role => role.Id == roleId);
 
-    public async Task<RoleDto?> GetRoleById(string id)
-    {
-        var role = await _roleManager.FindByIdAsync(id);
-        return role?.Adapt<RoleDto>();
+        return exists ? OperationResult.Success() : OperationResult.Failure(ErrorType.NotFound);
     }
 
-    public async Task RemoveSectionClaimOfRoleAsync(Guid roleId)
+    public async Task<OperationResult<RoleDto?>> GetRoleById(string id)
     {
-        await _context.RoleClaims.Where(rc => rc.RoleId == roleId)
+        var role = await roleManager.FindByIdAsync(id);
+        var roleDto = role?.Adapt<RoleDto>();
+        return OperationResult<RoleDto?>.Success(roleDto);
+    }
+
+    public async Task<OperationResult> RemoveSectionClaimOfRoleAsync(Guid roleId)
+    {
+        var updateResult = await context.RoleClaims
+            .Where(rc => rc.RoleId == roleId)
             .ExecuteUpdateAsync(s => s.SetProperty(rc => rc.IsActive, false));
+
+        return updateResult > 0
+            ? OperationResult.Success()
+            : OperationResult.Failure(ErrorType.Failure);
     }
 
-    public async Task AddSectionIdsToRoleClaimAsync(Guid roleId, IEnumerable<long> sectionIds)
+    public async Task<OperationResult> AddSectionIdsToRoleClaimAsync(Guid roleId, IEnumerable<long> sectionIds)
     {
         var roleClaims = sectionIds.Select(sectionId => new RoleClaim
         {
@@ -47,32 +57,44 @@ public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbC
             SectionId = sectionId
         }).ToList();
 
-        await _context.RoleClaims.AddRangeAsync(roleClaims);
+        await context.RoleClaims.AddRangeAsync(roleClaims);
+        return OperationResult.Success();
     }
 
-    public async Task Delete(Guid roleId)
+    public async Task<OperationResult> Delete(Guid roleId)
     {
-        await _context.Roles.AsQueryable()
+        var updateResult = await context.Roles.AsQueryable()
             .Where(role => role.Id == roleId)
             .ExecuteUpdateAsync(s => s.SetProperty(r => r.IsActive, false));
+
+        return updateResult > 0
+            ? OperationResult.Success()
+            : OperationResult.Failure(ErrorType.NotFound);
     }
 
-    public async Task Update(RoleDto roleDto)
+    public async Task<OperationResult> Update(RoleDto roleDto)
     {
         var role = roleDto.Adapt<Role>();
-        await _roleManager.UpdateAsync(role);
+        var result = await roleManager.UpdateAsync(role);
+
+        return result.Succeeded
+            ? OperationResult.Success()
+            : OperationResult.Failure(result.Errors.Select(e => e.Description).ToList(), ErrorType.Errors);
     }
 
-    public async Task<IEnumerable<IResponse>> GetAll(PaginationFilter pagination, RoleFiltering filtering,
-        CancellationToken token = default)
+    public async Task<OperationResult<IEnumerable<IResponse>>> GetAll(PaginationFilter pagination,
+        RoleFiltering filtering, CancellationToken token = default)
     {
-        var query = _context.Roles.AsQueryable() ;
+        var query = context.Roles.AsQueryable();
 
         query = QueryFilter.Filter(query, filtering);
 
-        return await query.Select(r => r.Adapt<GetRoleQueryResponse>())
+        var roles = await query
+            .Select(r => r.Adapt<GetRoleQueryResponse>())
             .Skip((pagination.PageNumber - 1) * pagination.PageSize)
             .Take(pagination.PageSize)
             .ToListAsync(token);
+
+        return OperationResult<IEnumerable<IResponse>>.Success(roles);
     }
 }

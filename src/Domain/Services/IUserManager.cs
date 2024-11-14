@@ -2,17 +2,17 @@
 
 public interface IUserManager
 {
-    Task AddRoleAndTheirClaimsToUserAsync(UserDto userDto, RoleDto roleDto);
-    Task<LoginResult> Login(string username, string password);
-    Task<RegisterResult> Register(RegisterDto registerDto);
-    Task RemoveUserRolesAndUserClaimsAsync(Guid userId);
-    Task<UserDto?> GetUserById(string id);
-    Task SaveToken(TokenDto tokens);
-    Task RemoveSectionClaimOfUserAsync(Guid userId);
-    Task AddSectionIdsToUserClaimAsync(Guid userId, IEnumerable<long> sectionIds);
-    Task<bool> AnyAsync(Guid userId, CancellationToken token = default);
-    Task<bool> AnyAsync(string userName, CancellationToken token = default);
-    Task Delete(Guid userId, CancellationToken token);
-    Task Update(UserDto userDto, CancellationToken token = default);
-    Task<IEnumerable<IResponse>> GetAll(int pageNumber, int pageSize, CancellationToken token = default);
+    Task<OperationResult> AddRoleAndTheirClaimsToUserAsync(UserDto userDto, RoleDto roleDto);
+    Task<OperationResult<LoginResult>> Login(string username, string password);
+    Task<OperationResult<RegisterResult>> Register(RegisterDto registerDto);
+    Task<OperationResult> RemoveUserRolesAndUserClaimsAsync(Guid userId);
+    Task<OperationResult<UserDto?>> GetUserById(string id);
+    Task<OperationResult> SaveToken(TokenDto tokens);
+    Task<OperationResult> RemoveSectionClaimOfUserAsync(Guid userId);
+    Task<OperationResult> AddSectionIdsToUserClaimAsync(Guid userId, IEnumerable<long> sectionIds);
+    Task<OperationResult<bool>> AnyAsync(Guid userId, CancellationToken token = default);
+    Task<OperationResult<bool>> AnyAsync(string userName, CancellationToken token = default);
+    Task<OperationResult> Delete(Guid userId, CancellationToken token);
+    Task<OperationResult> Update(UserDto userDto, CancellationToken token = default);
+    Task<OperationResult<IEnumerable<IResponse>>> GetAll(int pageNumber, int pageSize, CancellationToken token = default);
 }

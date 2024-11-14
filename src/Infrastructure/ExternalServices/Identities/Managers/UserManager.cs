@@ -4,23 +4,22 @@ public sealed class UserManager(
     SignInManager<User> signInManager,
     UserManager<User> userManager,
     UserManagementDbContext context,
-    IOptions<TokenOption> options) : IUserManager
+    IOptions<TokenOption> options)
+    : IUserManager
 {
-    private readonly SignInManager<User> _signInManager = signInManager;
-    private readonly UserManager<User> _userManager = userManager;
-    private readonly UserManagementDbContext _context = context;
     private readonly BearerTokenOption _optionBearer = options.Value.BearerTokenOption;
 
-    public async Task<LoginResult> Login(string username, string password)
+    public async Task<OperationResult<LoginResult>> Login(string username, string password)
     {
-        var result = await _signInManager.PasswordSignInAsync(username, password, false, lockoutOnFailure: false);
-        var user = await _userManager.FindByNameAsync(username);
-        return !result.Succeeded
-            ? new LoginResult(result.Succeeded, Guid.Empty)
-            : new LoginResult(result.Succeeded, user!.Id);
+        var result = await signInManager.PasswordSignInAsync(username, password, false, lockoutOnFailure: false);
+        var user = await userManager.FindByNameAsync(username);
+
+        return result.Succeeded && user != null
+            ? OperationResult<LoginResult>.Success(new LoginResult(true, user.Id))
+            : OperationResult<LoginResult>.Failure(string.Empty, ErrorType.Failure);
     }
 
-    public async Task<RegisterResult> Register(RegisterDto registerDto)
+    public async Task<OperationResult<RegisterResult>> Register(RegisterDto registerDto)
     {
         User user = new()
         {
@@ -29,118 +28,154 @@ public sealed class UserManager(
             FamilyName = registerDto.FamilyName,
             Email = registerDto.Username + "@Mam.com",
         };
-        var result = await _userManager.CreateAsync(user, registerDto.Password);
-        return new RegisterResult(result.Succeeded);
+
+        var result = await userManager.CreateAsync(user, registerDto.Password);
+
+        return result.Succeeded
+            ? OperationResult<RegisterResult>.Success(new RegisterResult(true))
+            : OperationResult<RegisterResult>.Failure(result.Errors.Select(e => e.Description).ToList(), ErrorType.Errors);
     }
 
-    public async Task RemoveUserRolesAndUserClaimsAsync(Guid userId)
+    public async Task<OperationResult> RemoveUserRolesAndUserClaimsAsync(Guid userId)
     {
-        var userRoleIds = await _context.UserRoles
+        var userRoleIds = await context.UserRoles
             .Where(u => u.UserId == userId)
             .Select(u => u.RoleId)
             .ToListAsync();
 
-        var sectionIds = await _context.RoleClaims
+        var sectionIds = await context.RoleClaims
             .Where(rc => userRoleIds.Contains(rc.RoleId))
             .Select(rc => rc.SectionId)
             .ToListAsync();
 
-        await _context.UserRoles
+        await context.UserRoles
             .Where(u => u.UserId == userId)
             .ExecuteUpdateAsync(s => s.SetProperty(ur => ur.IsActive, false));
 
-        await _context.UserClaims
+        await context.UserClaims
             .Where(uc => uc.UserId == userId && sectionIds.Contains(uc.SectionId))
             .ExecuteUpdateAsync(s => s.SetProperty(uc => uc.IsActive, true));
+
+        return OperationResult.Success();
     }
 
-    public async Task<UserDto?> GetUserById(string id)
+    public async Task<OperationResult<UserDto?>> GetUserById(string id)
     {
-        var user = await _userManager.FindByIdAsync(id);
-        return user?.Adapt<UserDto>();
+        var user = await userManager.FindByIdAsync(id);
+        return OperationResult<UserDto?>.Success(user?.Adapt<UserDto>());
     }
 
-    public async Task SaveToken(TokenDto tokens)
+    public async Task<OperationResult> SaveToken(TokenDto tokens)
     {
         UserToken token = new()
         {
             Value = tokens.AccessToken,
             UserId = tokens.UserId,
         };
-        // UserRefreshToken refreshToken = new()
-        // {
-        //     UserId = tokens.UserId,
-        //     to
-        // };
-        _context.UserTokens.Add(token);
-        await _context.SaveChangesAsync();
+
+        context.UserTokens.Add(token);
+        await context.SaveChangesAsync();
+
+        return OperationResult.Success();
     }
 
-    public async Task<bool> AnyAsync(Guid userId, CancellationToken token = default)
-        => await _userManager.Users.AsQueryable()
+    public async Task<OperationResult<bool>> AnyAsync(Guid userId, CancellationToken token = default)
+    {
+        var exists = await userManager.Users.AsQueryable()
             .AnyAsync(user => user.Id == userId, token);
+        return OperationResult<bool>.Success(exists);
+    }
 
-    public async Task<bool> AnyAsync(string userName, CancellationToken token = default)
+    public async Task<OperationResult<bool>> AnyAsync(string userName, CancellationToken token = default)
     {
-        return await _context.Users.AsQueryable()
+        var exists = await context.Users.AsQueryable()
             .AnyAsync(user => user.NormalizedUserName == userName.ToUpper(), token);
+        return OperationResult<bool>.Success(exists);
     }
 
-    public async Task Delete(Guid userId, CancellationToken token)
+    public async Task<OperationResult> Delete(Guid userId, CancellationToken token)
     {
-        await _context.Users.AsQueryable()
+        var updateResult = await context.Users.AsQueryable()
             .Where(u => u.Id == userId)
-            .ExecuteUpdateAsync(s => s.SetProperty(a => a.IsActive, false) , token);
+            .ExecuteUpdateAsync(s => s.SetProperty(a => a.IsActive, false), token);
+
+        return updateResult > 0
+            ? OperationResult.Success()
+            : OperationResult.Failure(ErrorType.Failure);
     }
 
-    public async Task Update(UserDto userDto, CancellationToken token = default)
+    public async Task<OperationResult> Update(UserDto userDto, CancellationToken token = default)
     {
-        var user = await _userManager.Users.AsQueryable()
-            .FirstAsync(user => user.Id == userDto.UserId, token);
-        
-        user.UserName = user.UserName;
+        var user = await userManager.Users.AsQueryable()
+            .FirstOrDefaultAsync(user => user.Id == userDto.UserId, token);
+
+        if (user is null)
+            return OperationResult.Failure(ErrorType.NotFound);
+
+
+        user.UserName = userDto.UserName;
         user.FirstName = userDto.FirstName;
         user.FamilyName = userDto.FamilyName;
-        user.Email = userDto.UserName  + "@Mam.com";
-        
-        await _userManager.SetUserNameAsync(user, userDto.UserName);
-        await _userManager.SetEmailAsync(user, userDto.UserName + "@Mam.com");
-        await _userManager.UpdateAsync(user);
+        user.Email = userDto.UserName + "@Mam.com";
+
+        await userManager.SetUserNameAsync(user, userDto.UserName);
+        await userManager.SetEmailAsync(user, userDto.UserName + "@Mam.com");
+        await userManager.UpdateAsync(user);
+
+        return OperationResult.Success();
     }
 
-    public async Task<IEnumerable<IResponse>> GetAll(int pageNumber, int pageSize, CancellationToken token = default)
-        => await _context.Users.AsQueryable()
+    public async Task<OperationResult<IEnumerable<IResponse>>> GetAll(int pageNumber, int pageSize,
+        CancellationToken token = default)
+    {
+        var users = await context.Users.AsQueryable()
             .Select(u => u.Adapt<GetUserQueryResponse>())
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(token);
 
-    // Refactor
-    public async Task AddRoleAndTheirClaimsToUserAsync(UserDto userDto, RoleDto roleDto)
+        return OperationResult<IEnumerable<IResponse>>.Success(users);
+    }
+
+    public async Task<OperationResult> AddRoleAndTheirClaimsToUserAsync(UserDto userDto, RoleDto roleDto)
     {
         var user = userDto.Adapt<User>();
-        await _userManager.AddToRoleAsync(user, roleDto.Name);
+        var addRoleResult = await userManager.AddToRoleAsync(user, roleDto.Name);
 
-        var claims = await _context.RoleClaims
+        if (!addRoleResult.Succeeded)
+            return OperationResult.Failure(ErrorType.Failure);
+
+        var claims = await context.RoleClaims
             .Where(rc => rc.RoleId == roleDto.Id)
             .Select(rc => new Claim(rc.Section.Name, rc.Section.Url, ClaimValueTypes.String, _optionBearer.Issuer))
             .ToListAsync();
 
-        await _userManager.AddClaimsAsync(user, claims);
+        var addClaimsResult = await userManager.AddClaimsAsync(user, claims);
+
+        return addClaimsResult.Succeeded
+            ? OperationResult.Success()
+            : OperationResult.Failure(addClaimsResult.Errors.Select(e => e.Description).ToList(), ErrorType.Errors);
     }
-    
-    public async Task RemoveSectionClaimOfUserAsync(Guid userId)
+
+    public async Task<OperationResult> RemoveSectionClaimOfUserAsync(Guid userId)
     {
-        await _context.UserClaims.Where(u => u.UserId == userId)
+        await context.UserClaims.Where(u => u.UserId == userId)
             .ExecuteUpdateAsync(s => s.SetProperty(uc => uc.IsActive, false));
+
+        return OperationResult.Success();
     }
-    
-    public async Task AddSectionIdsToUserClaimAsync(Guid userId, IEnumerable<long> sectionIds)
+
+    public async Task<OperationResult> AddSectionIdsToUserClaimAsync(Guid userId, IEnumerable<long> sectionIds)
     {
-        var userClaims = sectionIds.Select(sectionId => new UserClaim()
+        var userClaims = sectionIds.Select(sectionId => new UserClaim
         {
             UserId = userId,
             SectionId = sectionId
         }).ToList();
 
-        await _context.UserClaims.AddRangeAsync(userClaims);
+        await context.UserClaims.AddRangeAsync(userClaims);
+        await context.SaveChangesAsync();
+
+        return OperationResult.Success();
     }
 }

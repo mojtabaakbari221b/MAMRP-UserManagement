@@ -7,10 +7,15 @@ public sealed class DeleteRoleCommandHandler(IUnitOfWork uow)
 
     public async Task Handle(DeleteRoleCommandRequest request, CancellationToken token)
     {
-        if (!await _uow.Roles.RoleExistsAsync(request.Id))
+        var isExist = await _uow.Roles.RoleExistsAsync(request.Id);
+        if (!isExist.IsSuccess)
         {
             throw new RoleNotFoundException();
         }
-        await _uow.Roles.Delete(request.Id);
+        var result = await _uow.Roles.Delete(request.Id);
+        if (!result.IsSuccess)
+        {
+            throw new RoleNotDeletedException(result.Errors);
+        }
     }
 }

@@ -33,7 +33,7 @@ public sealed class FillBaseEntityValuesOnUpdatingInterceptor : SaveChangesInter
     private void SetBaseEntityValues(BaseEntity entity)
     {
         // entity.UpdaterUser;
-        entity.UpdateDatetime = DateTime.Now;
-        entity.PersianUpdateDatetime = new DateTime().ToPersianDateTime();
+        
+        entity.SetUpdateDatetime();
     }
 }

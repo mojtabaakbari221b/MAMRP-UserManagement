@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+
 namespace UserManagement.Infrastructure.Persistence.Interceptor;
 
 public sealed class SoftDeleteInterceptor : SaveChangesInterceptor
@@ -10,11 +12,8 @@ public sealed class SoftDeleteInterceptor : SaveChangesInterceptor
         foreach (var entry in eventData.Context.ChangeTracker.Entries())
         {
             if (entry is not { State: EntityState.Deleted, Entity: BaseEntity entity }) continue;
-
-            entity.IsActive = false;
-            entity.UpdateDatetime = DateTime.Now;
-            entity.PersianUpdateDatetime = new DateTime().ToPersianDateTime();
-            entry.State = EntityState.Modified;
+            
+            DeActiveEntity(entity, entry);
         }
 
         await ValueTask.CompletedTask;
@@ -29,12 +28,15 @@ public sealed class SoftDeleteInterceptor : SaveChangesInterceptor
         {
             if (entry is not { State: EntityState.Deleted, Entity: BaseEntity entity }) continue;
 
-            entity.IsActive = false;
-            entity.UpdateDatetime = DateTime.Now;
-            entity.PersianUpdateDatetime = new DateTime().ToPersianDateTime();
-            entry.State = EntityState.Modified;
+            DeActiveEntity(entity, entry);
         }
 
         return result;
+    }
+
+    private static void DeActiveEntity(BaseEntity entity, EntityEntry entry)
+    {
+        entity.IsActive = false;
+        entry.State = EntityState.Modified;
     }
 }

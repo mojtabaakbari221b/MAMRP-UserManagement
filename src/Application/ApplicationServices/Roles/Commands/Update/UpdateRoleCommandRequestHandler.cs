@@ -6,11 +6,16 @@ public sealed class UpdateRoleCommandRequestHandler(IUnitOfWork uow) : IRequestH
 
     public async Task Handle(UpdateRoleCommandRequest request, CancellationToken cancellationToken)
     {
-        if (!await _uow.Roles.RoleExistsAsync(request.Id))
+        var isExist = await _uow.Roles.RoleExistsAsync(request.Id);
+        if (!isExist.IsSuccess)
         {
             throw new RoleNotFoundException();
         }
-
-        await _uow.Roles.Update(request.Adapt<RoleDto>());
+        
+        var result = await _uow.Roles.Update(request.Adapt<RoleDto>());
+        if (!result.IsSuccess)
+        {
+            throw new RoleNotUpdatedException(result.Errors);
+        }
     }
 }

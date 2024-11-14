@@ -8,7 +8,8 @@ public sealed class DeleteUserCommandHandler(IUnitOfWork uow) : IRequestHandler<
 
     public async Task Handle(DeleteUserCommandRequest request, CancellationToken token)
     {
-        if (!await _uow.Users.AnyAsync(request.UserId, token))
+        var result = await _uow.Users.AnyAsync(request.UserId, token);
+        if (!result.Data)
         {
             throw new UserNotFoundException();
         }

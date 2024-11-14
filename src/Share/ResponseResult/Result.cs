@@ -16,6 +16,11 @@ public static class Result
     {
         return new FailureResponse(message, serviceCode);
     }
+    
+    public static FailureResponse Fail(List<string> errors, string serviceCode)
+    {
+        return new FailureResponse(errors, serviceCode);
+    }
 
     public static FailureValidationRespobse FailValidation(MamrpValidationException ex)
     {

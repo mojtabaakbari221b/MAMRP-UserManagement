@@ -32,5 +32,8 @@ public sealed class RegisterCommandRequestValidator : AbstractValidator<Register
     }
 
     private async Task<bool> AlreadyExistUserName(string userName, CancellationToken token)
-        => !await _uow.Users.AnyAsync(userName, token);
+    {
+        var result = await _uow.Users.AnyAsync(userName, token);
+        return !result.Data;
+    }
 }

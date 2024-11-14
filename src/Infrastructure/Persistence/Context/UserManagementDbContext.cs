@@ -9,7 +9,7 @@ public class UserManagementDbContext(DbContextOptions<UserManagementDbContext> o
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-        optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
+        // optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
         optionsBuilder.AddInterceptors(new FillBaseEntityValuesOnUpdatingInterceptor());
         optionsBuilder.AddInterceptors(new FillBaseEntityValuesOnCreatingInterceptor());
     }

@@ -1,5 +1,3 @@
-using UserManagement.Application.ApplicationServices.Roles.Exceptions;
-
 namespace UserManagement.Application.ApplicationServices.UserRoles.Commands.ChangeRoleOfUser;
 
 public sealed class ChangeRoleOfUserRequestHandler(IUnitOfWork uow) : IRequestHandler<ChangeRoleOfUserRequest>
@@ -9,23 +7,23 @@ public sealed class ChangeRoleOfUserRequestHandler(IUnitOfWork uow) : IRequestHa
     public async Task Handle(ChangeRoleOfUserRequest request, CancellationToken token)
     {
         await _uow.BeginTransactionAsync(token);
-        var userDto = await _uow.Users.GetUserById(request.UserId);
-        if (userDto is null)
+        var resultUserDto = await _uow.Users.GetUserById(request.UserId);
+        if (resultUserDto.Data is null)
         {
             await _uow.RoleBackTransactionAsync(token);
             throw new UserNotFoundException();
         }
 
-        await _uow.Users.RemoveUserRolesAndUserClaimsAsync(userDto.UserId);
+        await _uow.Users.RemoveUserRolesAndUserClaimsAsync(resultUserDto.Data.UserId);
 
-        var roleDto = await _uow.Roles.GetRoleById(request.RoleId);
-        if (roleDto is null)
+        var resultRoleDto = await _uow.Roles.GetRoleById(request.RoleId);
+        if (resultRoleDto.Data is null)
         {
             await _uow.RoleBackTransactionAsync(token);
             throw new RoleNotFoundException();
         }
 
-        await _uow.Users.AddRoleAndTheirClaimsToUserAsync(userDto, roleDto);
+        await _uow.Users.AddRoleAndTheirClaimsToUserAsync(resultUserDto.Data, resultRoleDto.Data);
 
         await _uow.CommitTransactionAsync(token);
     }

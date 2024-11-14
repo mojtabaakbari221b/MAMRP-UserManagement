@@ -47,7 +47,7 @@ public sealed class ServicesController(ISender sender) : ControllerBase
     }
     
     [HttpPost]
-    [Authorize(Policy = ServiceDeclaration.AddService)]
+    // [Authorize(Policy = ServiceDeclaration.AddService)]
     public async Task<SuccessResponse<bool>> Add(AddServiceCommandRequest request,
         CancellationToken token = default)
     {

@@ -26,7 +26,7 @@ public class MamrpExceptionHandlingMiddleware : IMiddleware
         {
             case MamrpBaseBadRequestException badRequestEx:
                 statusCode = (int)HttpStatusCode.BadRequest;
-                return Result.Fail(badRequestEx.Message, badRequestEx.ServiceCode);
+                return BadRequestFail(badRequestEx);
 
             case MamrpBaseNotFoundException notFoundEx:
                 statusCode = (int)HttpStatusCode.NotFound;
@@ -41,5 +41,11 @@ public class MamrpExceptionHandlingMiddleware : IMiddleware
                 return Result.Fail("An unexpected error occurred.", ServicesCode.UserManagement);
         }
     }
-    
+
+    private static FailureResponse BadRequestFail(MamrpBaseBadRequestException badRequestEx)
+    {
+        return badRequestEx.Errors.Count != 0
+            ? Result.Fail(badRequestEx.Errors, badRequestEx.ServiceCode)
+            : Result.Fail(badRequestEx.Message, badRequestEx.ServiceCode);
+    }
 }
