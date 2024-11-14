@@ -15,7 +15,7 @@ public sealed class ServiceDeclaration
     public const string GetByIdService = "010011";
     public const string DeleteService = "010012";
     public const string UpdateService = "010013";
-    public const string CreateService = "010014";
+    public const string AddService = "010014";
     public const string GetAllMenus = "010015";
     public const string GetByIdMenus = "010016";
     public const string DeleteMenus = "010017";

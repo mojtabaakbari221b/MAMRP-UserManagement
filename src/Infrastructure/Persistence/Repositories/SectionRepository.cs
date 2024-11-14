@@ -26,8 +26,6 @@ public sealed class SectionRepository(UserManagementDbContext context) : ISectio
         .Where(u => u.Id == id)
         .FirstOrDefaultAsync(token);
     
-    public async Task<int> Count(SectionType type) => await _context.Sections.Where(c => c.Type == type).CountAsync();
-
     public async Task<ListDto> GetAll(
         PaginationFilter pagination,
         object filtering,
@@ -57,4 +55,10 @@ public sealed class SectionRepository(UserManagementDbContext context) : ISectio
             .Where(c => c.Id == id)
             .Select(c => c.Adapt<ServiceDto>())
             .FirstOrDefaultAsync(token);
+
+    public async Task<bool> AnyAsync(string code, SectionType type, CancellationToken token = default)
+    {
+        var any = _context.Sections.Any(s => s.Code == code && s.Type == type);
+        return any;
     }
+}

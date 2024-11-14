@@ -1,4 +1,6 @@
-﻿namespace UserManagement.Api.Controllers.Sections;
+﻿using UserManagement.Application.ApplicationServices.Services.Commands.Add;
+
+namespace UserManagement.Api.Controllers.Sections;
 
 
 [ApiController]
@@ -41,6 +43,15 @@ public sealed class ServicesController(ISender sender) : ControllerBase
     {
         var command = UpdateServiceCommandRequest.Create(id, model);
         await _sender.Send(command, token);
+        return Result.Ok(true);
+    }
+    
+    [HttpPost]
+    [Authorize(Policy = ServiceDeclaration.AddService)]
+    public async Task<SuccessResponse<bool>> Add(AddServiceCommandRequest request,
+        CancellationToken token = default)
+    {
+        await _sender.Send(request, token);
         return Result.Ok(true);
     }
 }
