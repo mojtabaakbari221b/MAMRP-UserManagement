@@ -10,7 +10,17 @@ public class AddServiceCommandHandler(IUnitOfWork uow) : IRequestHandler<AddServ
             throw new ServiceAlreadyExistException();
         }
 
-        var section = request.Adapt<Section>();
+        Section section = new()
+        {
+            Code = request.Code,
+            Description = request.Description,
+            Name = request.Name,
+            DisplayName = request.DisplayName,
+            Url = request.Url,
+            Type = SectionType.Service,
+            GroupId = request.GroupId,
+        };
         await _uow.Sections.AddAsync(section);
+        await _uow.SaveChangesAsync(token);
     }
 }
