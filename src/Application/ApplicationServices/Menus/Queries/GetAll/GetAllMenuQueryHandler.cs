@@ -9,7 +9,7 @@ public sealed class GetAllMenuQueryHandler(IUnitOfWork uow)
 
     public async Task<PaginationResult<IEnumerable<MenuDto>>> Handle(GetAllMenuQueryRequest request, CancellationToken token)
     {
-        var listDto = await _uow.Sections.GetAll(request.Pagination, request.Filtering, SectionType.Menu, token);
+        var listDto = await _uow.Sections.GetAll(request.Pagination, request.Filtering, request.Ordering, SectionType.Menu, token);
         return new PaginationResult<IEnumerable<MenuDto>>
         (
             data: listDto.Responses.Adapt<IEnumerable<MenuDto>>(),

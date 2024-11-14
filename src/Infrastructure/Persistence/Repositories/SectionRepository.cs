@@ -1,4 +1,5 @@
 using Share.Dtos;
+using Share.Ordering;
 using Share.QueryFilterings;
 using UserManagement.Domain.Filterings;
 
@@ -29,6 +30,7 @@ public sealed class SectionRepository(UserManagementDbContext context) : ISectio
     public async Task<ListDto> GetAll(
         PaginationFilter pagination,
         object filtering,
+        object ordering,
         SectionType type,
         CancellationToken token = default
     )
@@ -37,6 +39,8 @@ public sealed class SectionRepository(UserManagementDbContext context) : ISectio
             .Where(x => x.Type == type);
 
         query = QueryFilter.Filter(query, filtering);
+
+        query = QueryOrdering.ApplyOrdering(query, ordering);
         
         var count = await query.CountAsync(token);
 
