@@ -7,7 +7,7 @@ public sealed class AccountController(ISender sender) : ControllerBase
 {
     private readonly ISender _sender = sender;
 
-    [HttpPost("register")]
+    [HttpPost]
     [Authorize(Policy = ServiceDeclaration.Register)]
     public async Task<SuccessResponse> Register(RegisterCommandRequest request,
         CancellationToken token = default)
@@ -16,7 +16,7 @@ public sealed class AccountController(ISender sender) : ControllerBase
         return Result.Ok();
     }
     
-    [HttpPost("login")]
+    [HttpPost]
     [Authorize(Policy = ServiceDeclaration.Login)]
     public async Task<SuccessResponse<LoginCommandResponse>> Login(LoginCommandRequest request,
         CancellationToken token = default)
@@ -25,7 +25,7 @@ public sealed class AccountController(ISender sender) : ControllerBase
         return Result.Ok(result);
     }
 
-    [HttpPut("update-user")]
+    [HttpPut]
     [Authorize(Policy = ServiceDeclaration.UpdateUser)]
     public async Task<SuccessResponse> UpdateUser(Guid userId, UpdateUserDto model,
         CancellationToken token = default)
@@ -34,7 +34,7 @@ public sealed class AccountController(ISender sender) : ControllerBase
         await _sender.Send(request, token);
         return Result.Ok();
     }
-    [HttpDelete("delete-user")]
+    [HttpDelete]
     [Authorize(Policy = ServiceDeclaration.DeleteUser)]
     public async Task<SuccessResponse> DeleteUser(Guid userId, 
         CancellationToken token = default)
@@ -43,23 +43,23 @@ public sealed class AccountController(ISender sender) : ControllerBase
         return Result.Ok();
     }
 
-    [HttpPost("change-user-role")]
+    [HttpPost]
     [Authorize(Policy = ServiceDeclaration.ChangeUserRole)]
     public async Task<SuccessResponse> ChangeUserRole(ChangeRoleOfUserRequest request) {
         await _sender.Send(request);
         return Result.Ok();
     }
     
-    [HttpPost("change-role-section-claim")]
+    [HttpPost]
     [Authorize(Policy = ServiceDeclaration.ChangeRoleSectionClaim)]
-    public async Task<SuccessResponse> ChangeRoleSectionClaim(ChangeSectionClaimOfRoleRequest request) {
+    public async Task<SuccessResponse> ChangeRoleClaim(ChangeSectionClaimOfRoleRequest request) {
         await _sender.Send(request);
         return Result.Ok();
     }
     
-    [HttpPost("change-user-section-claim")]
+    [HttpPost]
     [Authorize(Policy = ServiceDeclaration.ChangeUserSectionClaim)]
-    public async Task<SuccessResponse> ChangeUserSectionClaim(ChangeSectionClaimOfRoleRequest request) {
+    public async Task<SuccessResponse> ChangeUserClaim(ChangeSectionClaimOfRoleRequest request) {
         await _sender.Send(request);
         return Result.Ok();
     }
