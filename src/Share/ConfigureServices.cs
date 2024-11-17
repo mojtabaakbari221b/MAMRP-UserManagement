@@ -9,12 +9,6 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddShared(this IServiceCollection services)
     {
-        // Registering IHttpContextAccessor for DI
-        services.AddHttpContextAccessor();
-
-        // Registering IdentityExtension
-        services.AddScoped<IdentityExtension>();
-        
         services.AddScoped<MamrpExceptionHandlingMiddleware>();
         return services;
     }

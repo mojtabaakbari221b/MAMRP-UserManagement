@@ -1,10 +1,11 @@
+using Microsoft.AspNetCore.Http;
 using Share.Extensions;
 
 namespace UserManagement.Infrastructure.Persistence.Interceptor;
 
-public sealed class FillBaseEntityValuesOnUpdatingInterceptor(IdentityExtension identityExtension) : SaveChangesInterceptor
+public sealed class FillBaseEntityValuesOnUpdatingInterceptor(IHttpContextAccessor httpContextAccessor) : SaveChangesInterceptor
 {
-    private readonly IdentityExtension _identityExtension = identityExtension;
+    private readonly HttpContext? _httpContext = httpContextAccessor.HttpContext;
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
         InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
@@ -12,7 +13,9 @@ public sealed class FillBaseEntityValuesOnUpdatingInterceptor(IdentityExtension 
 
         foreach (var entry in eventData.Context.ChangeTracker.Entries())
         {
-            if (entry is not { State: EntityState.Modified, Entity: BaseEntity entity }) continue;
+            if (entry is not { State: EntityState.Modified, Entity: BaseEntity entity })
+                continue;
+
             SetBaseEntityValues(entity);
         }
 
@@ -22,7 +25,8 @@ public sealed class FillBaseEntityValuesOnUpdatingInterceptor(IdentityExtension 
 
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
-        if (eventData.Context is null) return result;
+        if (eventData.Context is null)
+            return result;
 
         foreach (var entry in eventData.Context.ChangeTracker.Entries())
         {
@@ -35,9 +39,12 @@ public sealed class FillBaseEntityValuesOnUpdatingInterceptor(IdentityExtension 
 
     private void SetBaseEntityValues(BaseEntity entity)
     {
-        var userId = _identityExtension.UserId();
-        entity.UpdaterUser = userId;
-        
+        if (_httpContext.User.Identity is null || !_httpContext.User.Identity.IsAuthenticated)
+        {
+            return;
+        }
+        entity.UpdaterUser = _httpContext.User.UserId();
+
         entity.SetUpdateDatetime();
     }
 }

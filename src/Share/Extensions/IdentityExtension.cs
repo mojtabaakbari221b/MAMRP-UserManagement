@@ -1,15 +1,13 @@
 namespace Share.Extensions;
 
-public class IdentityExtension(IHttpContextAccessor httpContextAccessor)
+public static class IdentityExtension
 {
-    private readonly ClaimsPrincipal? _user = httpContextAccessor.HttpContext?.User;
-    
-    public string? UserCode()
+    public static string? UserCode(this ClaimsPrincipal user)
     {
         try
         {
-            return (bool)_user?.Identity!.IsAuthenticated 
-                ? _user.FindFirst(ClaimTypes.SerialNumber)?.Value 
+            return user.Identity!.IsAuthenticated 
+                ? user.FindFirst(ClaimTypes.SerialNumber)?.Value 
                 : null;
         }
         catch (Exception)
@@ -17,14 +15,13 @@ public class IdentityExtension(IHttpContextAccessor httpContextAccessor)
             return null;
         }
     }
-
-    public Guid UserId()
+    public static Guid UserId(this ClaimsPrincipal user)
     {
         try
         {
-            if ((bool)_user?.Identity!.IsAuthenticated)
+            if (user.Identity!.IsAuthenticated)
             {
-                var result = _user.FindFirst("Id")?.Value ?? string.Empty;
+                var result = user.FindFirst("Id")?.Value ?? string.Empty;
                 return Guid.Parse(result);
             }
             else
@@ -35,13 +32,13 @@ public class IdentityExtension(IHttpContextAccessor httpContextAccessor)
             return Guid.Empty;
         }
     }
-    public string? UserPhoneNumber()
+    public static string? UserPhoneNumber(this ClaimsPrincipal user)
     {
         try
         {
-            if ((bool)_user?.Identity!.IsAuthenticated)
+            if (user.Identity!.IsAuthenticated)
             {
-                var sub = _user.FindFirst(ClaimTypes.UserData)?.Value;
+                var sub = user.FindFirst(ClaimTypes.UserData)?.Value;
                 return sub;
             }
             else
@@ -52,22 +49,20 @@ public class IdentityExtension(IHttpContextAccessor httpContextAccessor)
             return null;
         }
     }
-
-    public string? Roles()
+    public static string? Roles(this ClaimsPrincipal user)
     {
-        if ((bool)_user?.Identity!.IsAuthenticated)
+        if (user.Identity!.IsAuthenticated)
         {
-            var claimsIdentity = _user.Identity as ClaimsIdentity;
+            var claimsIdentity = user.Identity as ClaimsIdentity;
             return claimsIdentity?.Claims.Where(x => x.Type == ClaimTypes.Role)
-                                        .Select(x => x.Value)
-                                        .FirstOrDefault();
+                .Select(x => x.Value)
+                .FirstOrDefault();
         }
         else
             return null;
     }
-
-    public string? UserName()
+    public static string? UserName(this ClaimsPrincipal user)
     {
-        return _user?.Identity?.Name;
+        return user.Identity?.Name;
     }
 }

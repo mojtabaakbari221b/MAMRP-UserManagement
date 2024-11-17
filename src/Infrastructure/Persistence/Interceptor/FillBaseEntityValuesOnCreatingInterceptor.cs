@@ -1,11 +1,9 @@
-using Microsoft.AspNetCore.Http;
-using Share.Extensions;
-
 namespace UserManagement.Infrastructure.Persistence.Interceptor;
 
-public sealed class FillBaseEntityValuesOnCreatingInterceptor(IdentityExtension identityExtension) : SaveChangesInterceptor
+public sealed class FillBaseEntityValuesOnCreatingInterceptor(IHttpContextAccessor httpContextAccessor) : SaveChangesInterceptor
 {
-    private readonly IdentityExtension _identityExtension = identityExtension;
+    private readonly HttpContext? _httpContext = httpContextAccessor.HttpContext;
+
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
         InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
@@ -42,7 +40,11 @@ public sealed class FillBaseEntityValuesOnCreatingInterceptor(IdentityExtension 
 
     private void SetBaseEntityValues(BaseEntity entity)
     {
-        var userId = _identityExtension.UserId();
+        if (_httpContext?.User.Identity is null || !_httpContext.User.Identity.IsAuthenticated)
+        {
+            return;
+        }
+        var userId = _httpContext.User.UserId();
         entity.RegisteringUser = userId;
         entity.UpdaterUser = userId;
     }
