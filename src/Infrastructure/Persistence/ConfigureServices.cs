@@ -15,6 +15,10 @@ public static class ConfigureServices
         services.AddScoped<ISectionGroupRepository, SectionGroupRepository>();
         services.AddScoped<ISectionRepository, SectionRepository>();
         
+        // DI Interceptor
+        services.AddScoped<FillBaseEntityValuesOnUpdatingInterceptor>();
+        services.AddScoped<FillBaseEntityValuesOnCreatingInterceptor>();
+        
         // DI UnitOfWork
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         
