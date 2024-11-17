@@ -7,7 +7,7 @@ public sealed class AccountController(ISender sender) : ControllerBase
 {
     private readonly ISender _sender = sender;
 
-    [HttpPost]
+    [HttpPost("Register")]
     [Authorize(Policy = ServiceDeclaration.Register)]
     public async Task<SuccessResponse> Register(RegisterCommandRequest request,
         CancellationToken token = default)
@@ -16,11 +16,15 @@ public sealed class AccountController(ISender sender) : ControllerBase
         return Result.Ok();
     }
     
-    [HttpPost]
-    [Authorize(Policy = ServiceDeclaration.Login)]
-    public async Task<SuccessResponse<LoginCommandResponse>> Login(LoginCommandRequest request,
+    [HttpPost("Login")]
+    public async Task<SuccessResponse<LoginCommandResponse>> Login([FromBody] LoginCommandRequest request,
         CancellationToken token = default)
     {
+        if (! await ReCaptcha.IsValid(request.CaptchaValue))
+        {
+            throw new ReCaptchaFailedException();
+        }
+        
         var result = await _sender.Send(request, token);
         return Result.Ok(result);
     }
@@ -43,21 +47,22 @@ public sealed class AccountController(ISender sender) : ControllerBase
         return Result.Ok();
     }
 
-    [HttpPost]
+    [HttpPost("ChangeUserRole")]
     [Authorize(Policy = ServiceDeclaration.ChangeUserRole)]
     public async Task<SuccessResponse> ChangeUserRole(ChangeRoleOfUserRequest request) {
         await _sender.Send(request);
         return Result.Ok();
     }
+        
     
-    [HttpPost]
+    [HttpPost("ChangeRoleClaim")]
     [Authorize(Policy = ServiceDeclaration.ChangeRoleSectionClaim)]
     public async Task<SuccessResponse> ChangeRoleClaim(ChangeSectionClaimOfRoleRequest request) {
         await _sender.Send(request);
         return Result.Ok();
     }
     
-    [HttpPost]
+    [HttpPost("ChangeUserClaim")]
     [Authorize(Policy = ServiceDeclaration.ChangeUserSectionClaim)]
     public async Task<SuccessResponse> ChangeUserClaim(ChangeSectionClaimOfRoleRequest request) {
         await _sender.Send(request);
