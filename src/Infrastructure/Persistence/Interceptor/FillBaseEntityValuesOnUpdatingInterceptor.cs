@@ -1,7 +1,10 @@
+using Share.Extensions;
+
 namespace UserManagement.Infrastructure.Persistence.Interceptor;
 
-public sealed class FillBaseEntityValuesOnUpdatingInterceptor : SaveChangesInterceptor
+public sealed class FillBaseEntityValuesOnUpdatingInterceptor(IdentityExtension identityExtension) : SaveChangesInterceptor
 {
+    private readonly IdentityExtension _identityExtension = identityExtension;
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
         InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
@@ -32,7 +35,8 @@ public sealed class FillBaseEntityValuesOnUpdatingInterceptor : SaveChangesInter
 
     private void SetBaseEntityValues(BaseEntity entity)
     {
-        // entity.UpdaterUser;
+        var userId = _identityExtension.UserId();
+        entity.UpdaterUser = userId;
         
         entity.SetUpdateDatetime();
     }
