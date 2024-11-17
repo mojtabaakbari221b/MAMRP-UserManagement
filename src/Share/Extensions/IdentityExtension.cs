@@ -1,13 +1,15 @@
 namespace Share.Extensions;
 
-public static class IdentityExtension
+public class IdentityExtension(IHttpContextAccessor httpContextAccessor)
 {
-    public static string? UserCode(this ClaimsPrincipal user)
+    private readonly ClaimsPrincipal? _user = httpContextAccessor.HttpContext?.User;
+    
+    public string? UserCode()
     {
         try
         {
-            return user.Identity!.IsAuthenticated 
-                ? user.FindFirst(ClaimTypes.SerialNumber)?.Value 
+            return (bool)_user?.Identity!.IsAuthenticated 
+                ? _user.FindFirst(ClaimTypes.SerialNumber)?.Value 
                 : null;
         }
         catch (Exception)
@@ -16,13 +18,13 @@ public static class IdentityExtension
         }
     }
 
-    public static Guid UserId(this ClaimsPrincipal user)
+    public Guid UserId()
     {
         try
         {
-            if (user.Identity!.IsAuthenticated)
+            if ((bool)_user?.Identity!.IsAuthenticated)
             {
-                var result = user.FindFirst("Id")?.Value ?? string.Empty;
+                var result = _user.FindFirst("Id")?.Value ?? string.Empty;
                 return Guid.Parse(result);
             }
             else
@@ -33,13 +35,13 @@ public static class IdentityExtension
             return Guid.Empty;
         }
     }
-    public static string? UserPhoneNumber(this ClaimsPrincipal user)
+    public string? UserPhoneNumber()
     {
         try
         {
-            if (user.Identity!.IsAuthenticated)
+            if ((bool)_user?.Identity!.IsAuthenticated)
             {
-                var sub = user.FindFirst(ClaimTypes.UserData)?.Value;
+                var sub = _user.FindFirst(ClaimTypes.UserData)?.Value;
                 return sub;
             }
             else
@@ -51,11 +53,11 @@ public static class IdentityExtension
         }
     }
 
-    public static string? Roles(this ClaimsPrincipal user)
+    public string? Roles()
     {
-        if (user.Identity!.IsAuthenticated)
+        if ((bool)_user?.Identity!.IsAuthenticated)
         {
-            var claimsIdentity = user.Identity as ClaimsIdentity;
+            var claimsIdentity = _user.Identity as ClaimsIdentity;
             return claimsIdentity?.Claims.Where(x => x.Type == ClaimTypes.Role)
                                         .Select(x => x.Value)
                                         .FirstOrDefault();
@@ -64,8 +66,8 @@ public static class IdentityExtension
             return null;
     }
 
-    public static string? UserName(this ClaimsPrincipal user)
+    public string? UserName()
     {
-        return user.Identity?.Name;
+        return _user?.Identity?.Name;
     }
 }
