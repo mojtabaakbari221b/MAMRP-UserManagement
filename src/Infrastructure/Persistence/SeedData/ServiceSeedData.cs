@@ -1,10 +1,5 @@
 ﻿namespace UserManagement.Infrastructure.Persistence.SeedData;
 
-public interface IServiceSeedData
-{
-    void SeedData();
-}
-
 public sealed class ServiceSeedData(IServiceScopeFactory serviceScope) : IServiceSeedData
 {
     private readonly IServiceScopeFactory _serviceScope = serviceScope;
@@ -13,12 +8,12 @@ public sealed class ServiceSeedData(IServiceScopeFactory serviceScope) : IServic
     {
         using var serviceScope = _serviceScope.CreateScope();
         using var context = serviceScope.ServiceProvider.GetService<UserManagementDbContext>();
-
-        if (context is null)
-            throw new InvalidOperationException("DbContext not found");
+        using var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
+        var optionBearer = serviceScope.ServiceProvider.GetService<IOptions<TokenOption>>()!.Value.BearerTokenOption;
+        
 
         var sectionGroup = new SectionGroup { Name = "Public" };
-        context.SectionGroups.Add(sectionGroup);
+        context!.SectionGroups.Add(sectionGroup);
         context.SaveChanges();
         
         List<Section> services = [];
@@ -37,10 +32,33 @@ public sealed class ServiceSeedData(IServiceScopeFactory serviceScope) : IServic
                 Type = SectionType.Service
             });
 
-        if (services.Count == 0)
+        if (services.Count != 0)
+        {
+            context.Sections.AddRange(services);
+            context.SaveChanges();
+        }
+        
+        if (userManager!.Users.Any(u => u.FirstName == "Admin"))
             return;
 
-        context.Sections.AddRange(services);
-        context.SaveChanges();
+        User user = new()
+        {
+            FirstName = "Admin",
+            FamilyName = "admin",
+            UserName = "admin",
+            Email = "admin@Mam.com",
+        };
+
+        var result = userManager.CreateAsync(user, "@@Admin1@@").Result;
+        if (!result.Succeeded)
+        {
+            return;
+        }
+
+        var claims = context.Sections.AsQueryable()
+            .Select(rc => new Claim(rc.Name, rc.Url, ClaimValueTypes.String, optionBearer.Issuer))
+            .ToList();
+        
+        userManager.AddClaimsAsync(user, claims);
     }
 }
