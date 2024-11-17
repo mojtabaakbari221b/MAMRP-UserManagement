@@ -20,12 +20,14 @@ global using UserManagement.Application.ApplicationServices.Roles.Commands.Delet
 global using UserManagement.Application.ApplicationServices.Roles.Commands.Update;
 global using UserManagement.Application.ApplicationServices.Roles.Queries.GetById;
 global using UserManagement.Application.ApplicationServices.Menus.Queries.GetAll;
+global using UserManagement.Infrastructure.ExternalServices.ReCaptcha.Exceptions;
 global using UserManagement.Application.ApplicationServices.Roles.Queries.GetAll;
 global using UserManagement.Application.ApplicationServices.Menus.Commands.Add;
 global using UserManagement.Application.ApplicationServices.Roles.Commands.Add;
 global using UserManagement.Application.ApplicationServices.Services.Dtos;
 global using UserManagement.Application.ApplicationServices.Roles.Queries;
 global using UserManagement.Application.ApplicationServices.Menus.Dtos;
+global using UserManagement.Infrastructure.ExternalServices.ReCaptcha;
 global using UserManagement.Infrastructure.Persistence;
 global using Microsoft.AspNetCore.Authorization;
 global using UserManagement.Infrastructure;
