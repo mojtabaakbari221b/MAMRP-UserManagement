@@ -1,4 +1,10 @@
-﻿namespace UserManagement.Application.ApplicationServices.MenuGroup.Queries.GetAll;
+﻿using UserManagement.Domain.Filterings;
+using UserManagement.Domain.Orderings;
 
-public record GetAllMenuGroupQueryRequest(int PageNumber, int PageSize, SectionType Type)
-    : IRequest<IEnumerable<SectionGroupDto>>;
+namespace UserManagement.Application.ApplicationServices.MenuGroup.Queries.GetAll;
+
+public record GetAllMenuGroupQueryRequest(
+    PaginationFilter Pagination,
+    MenuGroupFiltering? Filtring,
+    MenuGroupOrdering? Ordering)
+    : IRequest<PaginationResult<IEnumerable<SectionGroupDto>>>;

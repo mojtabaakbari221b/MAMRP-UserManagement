@@ -1,16 +1,22 @@
 ﻿namespace UserManagement.Application.ApplicationServices.MenuGroup.Queries.GetAll;
 
 public sealed class GetAllMenuGroupQueryHandler(IUnitOfWork uow)
-    : IRequestHandler<GetAllMenuGroupQueryRequest, IEnumerable<SectionGroupDto>>
+    : IRequestHandler<GetAllMenuGroupQueryRequest, PaginationResult<IEnumerable<SectionGroupDto>>>
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public async Task<IEnumerable<SectionGroupDto>> Handle(GetAllMenuGroupQueryRequest request,
+    public async Task<PaginationResult<IEnumerable<SectionGroupDto>>> Handle(GetAllMenuGroupQueryRequest request,
         CancellationToken token)
     {
-        var responses = await _uow.SectionGroups
-            .ToList(request.PageNumber, request.PageSize, request.Type, token);
+        var results = await _uow.SectionGroups
+            .GetAll(request.Pagination, request.Filtring, request.Ordering, SectionType.Menu, token);
 
-        return responses.Adapt<IEnumerable<SectionGroupDto>>();
+        return new PaginationResult<IEnumerable<SectionGroupDto>>
+        (
+            data: results.Responses.Adapt<IEnumerable<SectionGroupDto>>(),
+            pageNumber: request.Pagination.PageNumber,
+            pageSize: request.Pagination.PageSize,
+            totalRecords: results.Count
+        );
     }
 }
