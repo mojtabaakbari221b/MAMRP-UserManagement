@@ -8,7 +8,7 @@ namespace UserManagement.Domain.Repositories;
 
 public interface ISectionRepository
 {
-    Task<Section> AddAsync(Section section);
+    Task AddAsync(Section section);
     void Delete(Section section);
     void Update(Section section);
     Task<Section?> FindAsync(long id, CancellationToken token = default);

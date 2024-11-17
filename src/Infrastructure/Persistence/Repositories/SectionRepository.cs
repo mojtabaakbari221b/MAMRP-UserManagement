@@ -9,24 +9,21 @@ public sealed class SectionRepository(UserManagementDbContext context) : ISectio
 {
     private readonly UserManagementDbContext _context = context;
 
-    public async Task<Section> AddAsync(Section section)
-    {
-        var entityEntry = await _context.Sections.AddAsync(section);
-        return entityEntry.Entity;
-    }
+    public async Task AddAsync(Section section)
+        => await _context.Sections.AddAsync(section);
 
-    public void Update(Section section) 
+    public void Update(Section section)
         => _context.Sections.Update(section);
-    
 
-    public void Delete(Section section) 
+
+    public void Delete(Section section)
         => _context.Sections.Remove(section);
 
     public async Task<Section?> FindAsync(long id, CancellationToken token =
         default) => await _context.Sections.AsQueryable()
         .Where(u => u.Id == id)
         .FirstOrDefaultAsync(token);
-    
+
     public async Task<ListDto> GetAll(
         PaginationFilter pagination,
         object filtering,
@@ -41,7 +38,7 @@ public sealed class SectionRepository(UserManagementDbContext context) : ISectio
         query = QueryFilter.Filter(query, filtering);
 
         query = QueryOrdering.ApplyOrdering(query, ordering);
-        
+
         var count = await query.CountAsync(token);
 
         return new ListDto(
