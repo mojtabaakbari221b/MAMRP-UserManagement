@@ -1,4 +1,7 @@
 ﻿global using UserManagement.Application.ApplicationServices.Account.Commands.LoginByRefreshToken;
+global using UserManagement.Application.ApplicationServices.ServiceGroups.Commands.Update;
+global using UserManagement.Application.ApplicationServices.ServiceGroups.Queries.GetById;
+global using UserManagement.Application.ApplicationServices.ServiceGroups.Commands.Add;
 global using UserManagement.Application.ApplicationServices.Account.Commands.Register;
 global using UserManagement.Application.ApplicationServices.MenuGroup.Commands.Delete;
 global using UserManagement.Application.ApplicationServices.MenuGroup.Commands.Update;
