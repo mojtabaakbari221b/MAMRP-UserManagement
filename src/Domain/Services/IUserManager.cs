@@ -1,4 +1,6 @@
-﻿namespace UserManagement.Domain.Services;
+﻿using Share.Dtos;
+
+namespace UserManagement.Domain.Services;
 
 public interface IUserManager
 {
@@ -14,5 +16,7 @@ public interface IUserManager
     Task<OperationResult<bool>> AnyAsync(string userName, CancellationToken token = default);
     Task<OperationResult> Delete(Guid userId, CancellationToken token);
     Task<OperationResult> Update(UserDto userDto, CancellationToken token = default);
-    Task<OperationResult<IEnumerable<IResponse>>> GetAll(int pageNumber, int pageSize, CancellationToken token = default);
+
+    Task<ListDto> GetAll(PaginationFilter pagination, UserFiltering filtering,
+        UserOrdering ordering, CancellationToken token = default);
 }

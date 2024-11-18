@@ -24,4 +24,14 @@ public sealed class ServiceDeclaration
     public const string ChangeUserSectionClaim = "010025";
     public const string UpdateUser = "010026";
     public const string DeleteUser = "010027";
+    public const string AddServiceGroup = "010028";
+    public const string UpdateServiceGroup = "010029";
+    public const string DeleteServiceGroup = "010030";
+    public const string GetAllServiceGroups = "010031";
+    public const string GetByIdServiceGroup = "010032";
+    public const string AddMenuGroup = "010033";
+    public const string UpdateMenuGroup = "010034";
+    public const string DeleteMenuGroup = "010035";
+    public const string GetAllMenuGroups = "010036";
+    public const string GetByIdMenuGroup = "010037";
 }

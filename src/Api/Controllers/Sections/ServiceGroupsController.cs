@@ -1,9 +1,11 @@
 ﻿namespace UserManagement.Api.Controllers.Sections;
 
-public sealed class ServiceGroupController(ISender sender) : ControllerBase
+[ApiController]
+[Route("api/[controller]")]
+public sealed class ServiceGroupsController(ISender sender) : ControllerBase
 {
     private readonly ISender _sender = sender;
-    
+
     [HttpPost]
     public async Task<SuccessResponse<SectionGroupDto>> Create(AddServiceGroupCommandRequest request,
         CancellationToken token = default)
@@ -37,7 +39,7 @@ public sealed class ServiceGroupController(ISender sender) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<SuccessResponse<IEnumerable<SectionGroupDto>>> GetAll(
+    public async Task<SuccessResponse<PaginationResult<IEnumerable<SectionGroupDto>>>> GetAll(
         [FromQuery] GetAllServiceGroupQueryRequest request,
         CancellationToken token = default)
     {

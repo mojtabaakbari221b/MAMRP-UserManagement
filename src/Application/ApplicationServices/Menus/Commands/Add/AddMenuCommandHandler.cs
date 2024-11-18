@@ -6,9 +6,9 @@ public sealed class AddMenuCommandHandler(IUnitOfWork uow) : IRequestHandler<Add
 
     public async Task<MenuDto> Handle(AddMenuCommandReqeust request, CancellationToken token)
     {
-        if (!await _uow.SectionGroups.AnyAsync(request.GroupId, token))
+        if (!await _uow.SectionGroups.AnyAsync(request.GroupId, SectionType.Menu, token))
         {
-            throw new SectionGroupNotFoundException();
+            throw new ServiceGroupNotFoundException();
         }
 
         Section menu = new()

@@ -1,6 +1,4 @@
-﻿using UserManagement.Application.ExternalServices.Identities.DTOs;
-
-namespace UserManagement.Infrastructure.ExternalServices.Identities.Tokens;
+﻿namespace UserManagement.Infrastructure.ExternalServices.Identities.Tokens;
 
 public sealed class TokenFactory(IOptions<TokenOption> options, UserManagementDbContext context) : ITokenFactory
 {
@@ -30,14 +28,10 @@ public sealed class TokenFactory(IOptions<TokenOption> options, UserManagementDb
             // User Costume Data
             new("Id", id.ToString(), ClaimValueTypes.String, _optionBearer.Issuer),
         };
-        // TODO: Add Section code in User token calim
-        
         var userSections = await _context.UserClaims.AsQueryable()
             .Where(u => u.UserId == id && u.Section.Type == SectionType.Service)
             .Select(s => new Claim(ClaimTypes.Role, s.Section.Code!, ClaimValueTypes.String, _optionBearer.Issuer))
             .ToListAsync();
-        
-        userSections.Add(new Claim(ClaimTypes.Role, SectionCode.MamRp01000, ClaimValueTypes.String, _optionBearer.Issuer));
         
         claims.AddRange(userSections);
         

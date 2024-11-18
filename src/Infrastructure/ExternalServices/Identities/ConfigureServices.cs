@@ -55,7 +55,7 @@ public static class ConfigureServices
                         // var tokenValidatorService = context.HttpContext.RequestServices.GetRequiredService<IBearerTokenValidatorService>();
                         // return tokenValidatorService.ValidateAsync(context);
                     },
-                    OnMessageReceived = context => { return Task.CompletedTask; },
+                    OnMessageReceived = context => Task.CompletedTask,
                     OnChallenge = context =>
                     {
                         var logger = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>()

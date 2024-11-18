@@ -19,10 +19,10 @@ public sealed class AccountController(ISender sender) : ControllerBase
     public async Task<SuccessResponse<LoginCommandResponse>> Login([FromBody] LoginCommandRequest request,
         CancellationToken token = default)
     {
-        if (! await ReCaptcha.IsValid(request.CaptchaValue))
-        {
-            throw new ReCaptchaFailedException();
-        }
+        // if (! await ReCaptcha.IsValid(request.CaptchaValue))
+        // {
+        //     throw new ReCaptchaFailedException();
+        // }
         
         var result = await _sender.Send(request, token);
         return Result.Ok(result);
@@ -64,7 +64,7 @@ public sealed class AccountController(ISender sender) : ControllerBase
     }
 
 
-    [HttpPut("{userId:guid:required}/CLaims")]
+    [HttpPut("{userId:guid:required}/Claims")]
     [Authorize(Policy = ServiceDeclaration.ChangeUserSectionClaim)]
     public async Task<SuccessResponse> ChangeUserSectionClaim(Guid userId, List<long> selectionIds,
         CancellationToken token = default)
@@ -88,5 +88,13 @@ public sealed class AccountController(ISender sender) : ControllerBase
     {
         var results = await _sender.Send(request, token);
         return Result.Ok(results);
+    }
+
+    // TODO: Add Logic
+    [HttpGet("Claims")]
+    public async Task<SuccessResponse> GetUserClaim(CancellationToken token = default)
+    {
+        await Task.CompletedTask;
+        return Result.Ok();
     }
 }

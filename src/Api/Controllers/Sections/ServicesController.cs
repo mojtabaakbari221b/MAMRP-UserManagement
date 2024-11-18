@@ -1,7 +1,4 @@
-﻿using UserManagement.Application.ApplicationServices.Services.Commands.Add;
-
-namespace UserManagement.Api.Controllers.Sections;
-
+﻿namespace UserManagement.Api.Controllers.Sections;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -9,30 +6,12 @@ public sealed class ServicesController(ISender sender) : ControllerBase
 {
     private readonly ISender _sender = sender;
 
-    [HttpGet]
-    [Authorize(Policy = ServiceDeclaration.GetAllServices)]
-    public async Task<SuccessResponse<PaginationResult<IEnumerable<ServiceDto>>>> GetAll([FromQuery] GetAllServiceQueryRequest request, 
+    [HttpPost]
+    [Authorize(Policy = ServiceDeclaration.AddService)]
+    public async Task<SuccessResponse<bool>> Create(AddServiceCommandRequest request,
         CancellationToken token = default)
     {
-        var responses = await _sender.Send(request, token);
-        return Result.Ok(responses);
-    }
-
-    [HttpGet("{id:long:required}")]
-    [Authorize(Policy = ServiceDeclaration.GetByIdService)]
-    public async Task<SuccessResponse<ServiceDto>> GetById(long id,
-        CancellationToken token = default)
-    {
-        var result = await _sender.Send(new GetSectionByIdQueryRequest(id), token);
-        return Result.Ok(result);
-    }
-
-    [HttpDelete("{id:long:required}")]
-    [Authorize(Policy = ServiceDeclaration.DeleteService)]
-    public async Task<SuccessResponse<bool>> Delete(long id,
-        CancellationToken token = default)
-    {
-        await _sender.Send(new DeleteServiecCommandRequest(id), token);
+        await _sender.Send(request, token);
         return Result.Ok(true);
     }
 
@@ -45,13 +24,34 @@ public sealed class ServicesController(ISender sender) : ControllerBase
         await _sender.Send(command, token);
         return Result.Ok(true);
     }
-    
-    [HttpPost]
-    // [Authorize(Policy = ServiceDeclaration.AddService)]
-    public async Task<SuccessResponse<bool>> Add(AddServiceCommandRequest request,
+
+
+    [HttpDelete("{id:long:required}")]
+    [Authorize(Policy = ServiceDeclaration.DeleteService)]
+    public async Task<SuccessResponse<bool>> Delete(long id,
         CancellationToken token = default)
     {
-        await _sender.Send(request, token);
+        await _sender.Send(new DeleteServiecCommandRequest(id), token);
         return Result.Ok(true);
+    }
+
+
+    [HttpGet("{id:long:required}")]
+    [Authorize(Policy = ServiceDeclaration.GetByIdService)]
+    public async Task<SuccessResponse<ServiceDto>> GetById(long id,
+        CancellationToken token = default)
+    {
+        var result = await _sender.Send(new GetSectionByIdQueryRequest(id), token);
+        return Result.Ok(result);
+    }
+
+    [HttpGet]
+    [Authorize(Policy = ServiceDeclaration.GetAllServices)]
+    public async Task<SuccessResponse<PaginationResult<IEnumerable<ServiceDto>>>> GetAll(
+        [FromQuery] GetAllServiceQueryRequest request,
+        CancellationToken token = default)
+    {
+        var responses = await _sender.Send(request, token);
+        return Result.Ok(responses);
     }
 }

@@ -28,7 +28,7 @@ public sealed class RolesController(ISender sender) : ControllerBase
         return Result.Ok();
     }
 
-    [HttpPut("{id:guid:required}/Cliams")]
+    [HttpPut("{id:guid:required}/Claims")]
     [Authorize(Policy = ServiceDeclaration.ChangeRoleSectionClaim)]
     public async Task<SuccessResponse> ChangeRoleSectionClaim(Guid id, List<long> selectionIds,
         CancellationToken token = default)

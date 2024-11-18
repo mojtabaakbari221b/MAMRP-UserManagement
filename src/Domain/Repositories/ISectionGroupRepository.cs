@@ -1,4 +1,9 @@
-﻿namespace UserManagement.Domain.Repositories;
+﻿using Share.Dtos;
+using Share.QueryFilterings;
+using UserManagement.Domain.Filterings;
+using UserManagement.Domain.Orderings;
+
+namespace UserManagement.Domain.Repositories;
 
 public interface ISectionGroupRepository
 {
@@ -7,6 +12,10 @@ public interface ISectionGroupRepository
     Task AddAsync(SectionGroup sectionGroup, CancellationToken token = default);
     Task<SectionGroup?> FindAsync(long id, SectionType type, CancellationToken token = default);
     Task<bool> AnyAsync(long groupId, SectionType type, CancellationToken token = default);
-    Task<IEnumerable<IResponse>> ToList(int page, int size, SectionType type, CancellationToken token = default);
+    Task<bool> AnyAsync(string name, SectionType type, CancellationToken token = default);
+
+    Task<ListDto> GetAll(PaginationFilter pagination, object? filtering,
+        object? ordering, SectionType type, CancellationToken token = default);
+
     Task<IResponse?> GetById(long id, SectionType type, CancellationToken token = default);
 }

@@ -26,8 +26,8 @@ public sealed class SectionRepository(UserManagementDbContext context) : ISectio
 
     public async Task<ListDto> GetAll(
         PaginationFilter pagination,
-        object filtering,
-        object ordering,
+        object? filtering,
+        object? ordering,
         SectionType type,
         CancellationToken token = default
     )

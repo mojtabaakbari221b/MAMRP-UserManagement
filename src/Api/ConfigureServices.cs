@@ -13,19 +13,21 @@ public static class ConfigureServices
     }
     private static IServiceCollection AddSwaggerConfig(this IServiceCollection services)
     {
-        services.AddSwaggerGen(options =>
+        services.AddSwaggerGen(c =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Mamrp-UserManagement", Version = "v1" });
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                In = ParameterLocation.Header,
-                Description = "Please enter token",
                 Name = "Authorization",
                 Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
                 BearerFormat = "JWT",
-                Scheme = "bearer"
+                In = ParameterLocation.Header,
+                Description = "Enter 'Bearer' [space] and then your token."
             });
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
                     new OpenApiSecurityScheme
@@ -36,10 +38,14 @@ public static class ConfigureServices
                             Id = "Bearer"
                         }
                     },
-                    Array.Empty<string>()
+                    []
                 }
             });
+
+            // اضافه کردن اکستنشن جاوااسکریپت برای Swagger UI
+            c.OperationFilter<SwaggerLoginOperationFilter>();
         });
+
 
         return services;
     }

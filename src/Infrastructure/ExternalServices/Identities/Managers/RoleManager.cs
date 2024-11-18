@@ -1,4 +1,6 @@
-﻿namespace UserManagement.Infrastructure.ExternalServices.Identities.Managers;
+﻿using Share.Dtos;
+
+namespace UserManagement.Infrastructure.ExternalServices.Identities.Managers;
 
 public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbContext context)
     : IRoleManager
@@ -20,7 +22,9 @@ public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbC
     public async Task<OperationResult> RoleExistsAsync(string roleName)
     {
         var exists = await roleManager.RoleExistsAsync(roleName);
-        return exists ? OperationResult.Success() : OperationResult.Failure(ErrorType.NotFound);
+        return exists
+            ? OperationResult.Success()
+            : OperationResult.Failure(ErrorType.NotFound);
     }
 
     public async Task<OperationResult> RoleExistsAsync(Guid roleId)
@@ -82,8 +86,36 @@ public sealed class RoleManager(RoleManager<Role> roleManager, UserManagementDbC
             : OperationResult.Failure(result.Errors.Select(e => e.Description).ToList(), ErrorType.Errors);
     }
 
+    public async Task<ListDto> GetAll(PaginationFilter pagination,
+        RoleFiltering? filtering,
+        RoleOrdering? ordering,
+        CancellationToken token = default)
+    {
+        var query = context.Roles.AsQueryable();
+
+        query = QueryFilter.Filter(query, filtering);
+
+        query = QueryOrdering.ApplyOrdering(query, ordering);
+
+        var count = await query.CountAsync(token);
+
+        var roles = await query
+            .Select(r => r.Adapt<GetRoleQueryResponse>())
+            .Skip((pagination.PageNumber - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
+            .ToListAsync(token);
+
+        return new ListDto(
+            count,
+            await query.Select(c => c.Adapt<GetRoleQueryResponse>())
+                .Skip((pagination.PageNumber - 1) * pagination.PageSize)
+                .Take(pagination.PageSize)
+                .ToListAsync(token)
+        );
+    }
+
     public async Task<OperationResult<IEnumerable<IResponse>>> GetAll(PaginationFilter pagination,
-        RoleFiltering filtering, CancellationToken token = default)
+        RoleFiltering? filtering, CancellationToken token = default)
     {
         var query = context.Roles.AsQueryable();
 

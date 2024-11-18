@@ -25,5 +25,6 @@ public class UserManagementDbContext(
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.ConfigSoftDeleteFilter();
     }
 }

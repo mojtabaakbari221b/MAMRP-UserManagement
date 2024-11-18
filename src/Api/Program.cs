@@ -8,16 +8,13 @@ var services = builder.Services;
         .AddApiServices(configuration)
         .AddShared();
 }
+
 var app = builder.Build();
 {
     app.UseSeedingData();
-    
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
 
+    app.UseSwaggerConfig();
+    
     app.UseHttpsRedirection();
 
     app.UseExceptionHandling();

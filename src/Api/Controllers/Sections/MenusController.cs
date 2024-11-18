@@ -2,13 +2,13 @@
 
 [ApiController]
 [Route("api/[controller]")]
-public sealed class MenuController(ISender sender) : ControllerBase
+public sealed class MenusController(ISender sender) : ControllerBase
 {
     private readonly ISender _sender = sender;
 
     [HttpPost]
     [Authorize(Policy = ServiceDeclaration.CreateMenus)]
-    public async Task<SuccessResponse<MenuDto>> Post(AddMenuCommandReqeust reqeust,
+    public async Task<SuccessResponse<MenuDto>> Create(AddMenuCommandReqeust reqeust,
         CancellationToken token = default)
     {
         var result = await _sender.Send(reqeust, token);
@@ -17,7 +17,7 @@ public sealed class MenuController(ISender sender) : ControllerBase
 
     [HttpPut("{id:long:required}")]
     [Authorize(Policy = ServiceDeclaration.UpdateMenus)]
-    public async Task<SuccessResponse> Put(long id, UpdateMenuDto model,
+    public async Task<SuccessResponse> Update(long id, UpdateMenuDto model,
         CancellationToken token = default)
     {
         var reqeust = UpdateMenuCommandRequest.Create(id, model);
@@ -43,7 +43,7 @@ public sealed class MenuController(ISender sender) : ControllerBase
 
     [HttpGet]
     [Authorize(Policy = ServiceDeclaration.GetAllMenus)]
-    public async Task<SuccessResponse<PaginationResult<IEnumerable<MenuDto>>>> Get([FromQuery] GetAllMenuQueryRequest request,
+    public async Task<SuccessResponse<PaginationResult<IEnumerable<MenuDto>>>> GetAll([FromQuery] GetAllMenuQueryRequest request,
         CancellationToken token = default)
     {
         var result = await _sender.Send(request, token);

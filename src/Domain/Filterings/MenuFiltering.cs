@@ -1,6 +1,3 @@
 namespace UserManagement.Domain.Filterings;
 
-public class MenuFiltering
-{
-    
-}
+public sealed record MenuFiltering();

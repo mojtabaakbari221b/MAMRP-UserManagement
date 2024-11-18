@@ -9,13 +9,14 @@ public sealed class ServiceSeedData(IServiceScopeFactory serviceScope) : IServic
         using var serviceScope = _serviceScope.CreateScope();
         using var context = serviceScope.ServiceProvider.GetService<UserManagementDbContext>();
         using var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
-        var optionBearer = serviceScope.ServiceProvider.GetService<IOptions<TokenOption>>()!.Value.BearerTokenOption;
-        
 
         var sectionGroup = new SectionGroup { Name = "Public" };
-        context!.SectionGroups.Add(sectionGroup);
-        context.SaveChanges();
-        
+        if (!context!.SectionGroups.Any(s => s.Name == "Public"))
+        {
+            context.SectionGroups.Add(sectionGroup);
+            context.SaveChanges();
+        }
+
         List<Section> services = [];
         var declaratedServices = ConstantRetriever.GetConstants(typeof(ServiceDeclaration));
 
@@ -37,28 +38,37 @@ public sealed class ServiceSeedData(IServiceScopeFactory serviceScope) : IServic
             context.Sections.AddRange(services);
             context.SaveChanges();
         }
-        
-        if (userManager!.Users.Any(u => u.FirstName == "Admin"))
-            return;
 
-        User user = new()
+
+        if (userManager!.Users.Any(u => u.UserName == "admin"))
+        {
+            return;
+        }
+
+        User newUser = new()
         {
             FirstName = "Admin",
             FamilyName = "admin",
             UserName = "admin",
             Email = "admin@Mam.com",
         };
+        var result = userManager.CreateAsync(newUser, "@@Admin1@@").Result;
 
-        var result = userManager.CreateAsync(user, "@@Admin1@@").Result;
-        if (!result.Succeeded)
-        {
-            return;
-        }
 
-        var claims = context.Sections.AsQueryable()
-            .Select(rc => new Claim(rc.Name, rc.Url, ClaimValueTypes.String, optionBearer.Issuer))
+        var user = context.Users.First(s => s.FirstName == "admin");
+
+        var userClaims = context.Sections.AsQueryable()
+            .Where(s => s.Type == SectionType.Service)
+            .Select(s => new UserClaim()
+            {
+                ClaimType = s.Name,
+                ClaimValue = s.Code,
+                SectionId = s.Id,
+                UserId = user.Id
+            })
             .ToList();
-        
-        userManager.AddClaimsAsync(user, claims);
+
+        context.UserClaims.AddRange(userClaims);
+        context.SaveChanges();
     }
 }

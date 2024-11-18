@@ -4,8 +4,9 @@ public static class ConfigureServices
 {
     public static WebApplication UseSeedingData(this WebApplication app)
     {
-        var seedDataCategory = app.Services.GetService<IServiceSeedData>();
-        seedDataCategory!.SeedData();
+        var seedDataSection = app.Services.GetService<IServiceSeedData>();
+        seedDataSection!.SeedData();
+
         return app;
     }
 
@@ -38,12 +39,13 @@ public static class ConfigureServices
 
         // DI Identity
         services.AddIdentity<User, Role>(options =>
-            {
-                options.User.RequireUniqueEmail = false;
-                options.SignIn.RequireConfirmedEmail = false;
-            })
-            .AddEntityFrameworkStores<UserManagementDbContext>()
-            .AddDefaultTokenProviders();
+        {
+            options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            options.User.RequireUniqueEmail = false;
+        })
+        .AddEntityFrameworkStores<UserManagementDbContext>()
+        .AddDefaultTokenProviders();
 
         return services;
     }

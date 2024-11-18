@@ -22,4 +22,10 @@
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Persistence\Migrations\20241113104147_InitMig.Designer.cs" />
+    <Compile Remove="Persistence\Migrations\UserManagementDbContextModelSnapshot.cs" />
+    <Compile Remove="Persistence\Migrations\20241113104147_InitMig.cs" />
+  </ItemGroup>
+
 </Project>

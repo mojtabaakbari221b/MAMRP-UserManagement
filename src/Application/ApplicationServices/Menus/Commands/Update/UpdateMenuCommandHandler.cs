@@ -7,9 +7,9 @@ public sealed class UpdateMenuCommandHandler(IUnitOfWork uow)
 
     public async Task Handle(UpdateMenuCommandRequest request, CancellationToken token)
     {
-        if (await _uow.SectionGroups.AnyAsync(request.GroupId, token))
+        if (!await _uow.SectionGroups.AnyAsync(request.GroupId, SectionType.Menu, token))
         {
-            throw new SectionGroupNotFoundException();
+            throw new MenuGroupNotFoundException();
         }
 
         var menu = await _uow.Sections.FindAsync(request.Id, token)

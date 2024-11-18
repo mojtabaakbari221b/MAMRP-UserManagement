@@ -15,6 +15,10 @@ public class SectionGroupRepository(UserManagementDbContext context) : ISectionG
         => await _context.SectionGroups.AsQueryable()
             .AnyAsync(g => g.Id == groupId && g.Type == type, token);
 
+    public async Task<bool> AnyAsync(string name, SectionType type, CancellationToken token = default)
+        => await _context.SectionGroups.AsQueryable()
+            .AnyAsync(g => g.Name == name && g.Type == type, token);
+
 
     public void Update(SectionGroup sectionGroup)
         => _context.SectionGroups.Update(sectionGroup);
@@ -26,7 +30,7 @@ public class SectionGroupRepository(UserManagementDbContext context) : ISectionG
         SectionType type,
         CancellationToken token)
     {
-        var query = _context.Sections.AsQueryable()
+        var query = _context.SectionGroups.AsQueryable()
             .Where(x => x.Type == type);
 
         query = QueryFilter.Filter(query, filtering);
@@ -37,7 +41,7 @@ public class SectionGroupRepository(UserManagementDbContext context) : ISectionG
 
         return new ListDto(
             count,
-            await query.Select(c => c.Adapt<MenuDto>())
+            await query.Select(c => c.Adapt<SectionGroupDto>())
                 .Skip((pagination.PageNumber - 1) * pagination.PageSize)
                 .Take(pagination.PageSize)
                 .ToListAsync(token)

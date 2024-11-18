@@ -1,5 +1,6 @@
 ﻿namespace UserManagement.Infrastructure.Persistence.UnitOfWorks;
 
+
 public class UnitOfWork(
     UserManagementDbContext context,
     ISectionRepository sections,
@@ -23,18 +24,24 @@ public class UnitOfWork(
 
     public async Task BeginTransactionAsync(CancellationToken token = default)
     {
+        if (_transaction != null)
+        {
+            throw new InvalidOperationException("A transaction is already in progress.");
+        }
+
         _transaction = await _context.Database.BeginTransactionAsync(token);
     }
 
     public async Task CommitTransactionAsync(CancellationToken token = default)
     {
-        if (_transaction is null)
+        if (_transaction == null)
         {
-            return;
+            throw new InvalidOperationException("No transaction is in progress to commit.");
         }
+
         try
         {
-            await _transaction!.CommitAsync(token);
+            await _transaction.CommitAsync(token);
         }
         finally
         {
@@ -44,13 +51,14 @@ public class UnitOfWork(
 
     public async Task RoleBackTransactionAsync(CancellationToken token = default)
     {
-        if (_transaction is null)
+        if (_transaction == null)
         {
-            return;
+            throw new InvalidOperationException("No transaction is in progress to rollback.");
         }
+
         try
         {
-            await _transaction!.RollbackAsync(token);
+            await _transaction.RollbackAsync(token);
         }
         finally
         {
@@ -60,11 +68,11 @@ public class UnitOfWork(
 
     private async Task DisposeTransactionAsync()
     {
-        if (_transaction is null)
+        if (_transaction != null)
         {
-            return;
+            await _transaction.DisposeAsync();
+            _transaction = null;
         }
-        await _transaction.DisposeAsync();
     }
 
     public void Dispose()

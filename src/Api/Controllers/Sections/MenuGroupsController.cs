@@ -39,7 +39,7 @@ public class MenuGroupsController(ISender sender) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<SuccessResponse<IEnumerable<SectionGroupDto>>> GetAll(
+    public async Task<SuccessResponse<PaginationResult<IEnumerable<SectionGroupDto>>>> GetAll(
         [FromQuery] GetAllMenuGroupQueryRequest request,
         CancellationToken token = default)
     {

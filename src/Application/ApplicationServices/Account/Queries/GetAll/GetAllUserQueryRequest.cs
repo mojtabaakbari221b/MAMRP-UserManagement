@@ -2,6 +2,6 @@
 
 public sealed record GetAllUserQueryRequest(
     PaginationFilter Pagination,
-    UserFiltering Filtering,
-    UserOrdering Ordering)
+    UserFiltering? Filtering,
+    UserOrdering? Ordering)
     : IRequest<PaginationResult<IEnumerable<GetUserQueryResponse>>>;

@@ -2,7 +2,7 @@
 
 public abstract class ResultResponse
 {
-    protected bool IsSuccess { get; init; }
+    public bool IsSuccess { get; init; }
     public bool IsFailed => !IsSuccess;
     public string? ErrorMessage { get; set; }
     public string? ServiceCode { get; set; }

@@ -26,9 +26,23 @@ public class SectionConfiguration : IEntityTypeConfiguration<Section>
             .WithMany()
             .HasForeignKey(s => s.GroupId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         builder
             .Property(s => s.Id)
             .ValueGeneratedOnAdd();
+
+        var persianRecordDatetimeConverter = new ValueConverter<PersianDateTime, DateTime>(
+            p => p.ToDateTime(),
+            d => new PersianDateTime(d));
+
+        var persianUpdateDatetimeConverter = new ValueConverter<PersianDateTime, DateTime>(
+            p => p.ToDateTime(),
+            d => new PersianDateTime(d));
+
+        builder.Property(s => s.PersianRecordDatetime)
+            .HasConversion(persianRecordDatetimeConverter);
+
+        builder.Property(s => s.PersianUpdateDatetime)
+            .HasConversion(persianUpdateDatetimeConverter);
     }
 }

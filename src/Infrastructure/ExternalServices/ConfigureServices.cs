@@ -5,7 +5,8 @@ namespace UserManagement.Infrastructure.ExternalServices;
 
 public static class ConfigureServices
 {
-    internal static IServiceCollection AddExternalServices(this IServiceCollection services, IConfiguration configuration)
+    internal static IServiceCollection AddExternalServices(this IServiceCollection services,
+        IConfiguration configuration)
     {
         // DI Identities
         services.AddScoped<ITokenFactory, TokenFactory>();
@@ -14,14 +15,9 @@ public static class ConfigureServices
 
         // DI Options
         services.Configure<TokenOption>(configuration);
-        
-        services.Configure<IdentityOptions>(options =>
-        {
-            // options.User.RequireUniqueEmail = true;
-            options.User.AllowedUserNameCharacters =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        });
+
         services.AddIdentityConfiguration(configuration);
+        
         return services;
     }
 }

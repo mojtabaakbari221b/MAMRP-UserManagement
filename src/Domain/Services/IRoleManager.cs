@@ -1,4 +1,5 @@
-﻿using Share.QueryFilterings;
+﻿using Share.Dtos;
+using Share.QueryFilterings;
 using UserManagement.Domain.Filterings;
 
 namespace UserManagement.Domain.Services;
@@ -13,5 +14,7 @@ public interface IRoleManager
     Task<OperationResult> AddSectionIdsToRoleClaimAsync(Guid roleId, IEnumerable<long> sectionIds);
     Task<OperationResult> Delete(Guid roleId);
     Task<OperationResult> Update(RoleDto roleDto);
-    Task<OperationResult<IEnumerable<IResponse>>> GetAll(PaginationFilter pagination, RoleFiltering filtering, CancellationToken token = default);
+
+    Task<ListDto> GetAll(PaginationFilter pagination, RoleFiltering? filtering,
+        RoleOrdering? ordering, CancellationToken token = default);
 }

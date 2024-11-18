@@ -1,6 +1,3 @@
 namespace UserManagement.Domain.Filterings;
 
-public class RoleFiltering
-{
-    
-}
+public sealed class RoleFiltering();

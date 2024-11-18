@@ -1,7 +1,7 @@
 ﻿namespace UserManagement.Application.ApplicationServices.Account.Queries;
 
 public sealed record GetUserQueryResponse(
-    Guid UserId,
+    Guid Id,
     string UserName,
     string FirstName,
     string FamilyName)
