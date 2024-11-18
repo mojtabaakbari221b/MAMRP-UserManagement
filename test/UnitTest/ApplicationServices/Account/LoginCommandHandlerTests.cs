@@ -18,7 +18,7 @@ public class LoginCommandHandlerTests
     public async Task Handle_WhenLoginFails_ShouldThrowLoginFailedException()
     {
         // Arrange
-        var request = new LoginCommandRequest("testuser", "wrongpassword");
+        var request = new LoginCommandRequest("testuser", "wrongpassword", "wrongtoken");
 
         _uow.Users.Login(Arg.Any<string>(), Arg.Any<string>())
             .Returns(Task.FromResult(OperationResult<LoginResult>.Failure("Invalid credentials", ErrorType.Errors)));
@@ -35,7 +35,7 @@ public class LoginCommandHandlerTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        var request = new LoginCommandRequest("testuser", "correctpassword");
+        var request = new LoginCommandRequest("testuser", "correctpassword", "wrongpassword");
         var loginResult = OperationResult<LoginResult>.Success(new LoginResult(true, userId));
         var token = new TokenResult("access_token", "refresh_token", Guid.NewGuid());
 

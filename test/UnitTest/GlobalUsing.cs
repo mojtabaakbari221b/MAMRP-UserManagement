@@ -5,9 +5,14 @@ global using UserManagement.Application.ApplicationServices.Account.Queries.GetB
 global using UserManagement.Application.ApplicationServices.Account.Commands.Delete;
 global using UserManagement.Application.ApplicationServices.Account.Commands.Login;
 global using UserManagement.Application.ApplicationServices.Account.Queries.GetAll;
+global using UserManagement.Application.ApplicationServices.Roles.Commands.Update;
+global using UserManagement.Application.ApplicationServices.Roles.Commands.Delete;
+global using UserManagement.Application.ApplicationServices.Roles.Queries.GetAll;
 global using UserManagement.Application.ApplicationServices.UserRoles.Exceptions;
 global using UserManagement.Application.ApplicationServices.Account.Exceptions;
+global using UserManagement.Application.ApplicationServices.Roles.Exceptions;
 global using UserManagement.Application.ApplicationServices.Account.Queries;
+global using UserManagement.Application.ApplicationServices.Roles.Queries;
 global using UserManagement.Application.ExternalServices.Identities.DTOs;
 global using UserManagement.Application.ExternalServices.Identities;
 global using UserManagement.Domain.Services.DTOs;
