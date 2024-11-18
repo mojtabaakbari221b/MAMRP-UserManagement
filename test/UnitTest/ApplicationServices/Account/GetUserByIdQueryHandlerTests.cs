@@ -38,7 +38,7 @@ public class GetUserByIdQueryHandlerTests
 
         // Assert
         result.Should().NotBeNull();
-        result.UserId.Should().Be(mockUser.UserId);
+        result.Id.Should().Be(mockUser.UserId);
         result.UserName.Should().Be(mockUser.UserName);
         result.FirstName.Should().Be(mockUser.FirstName);
         result.FamilyName.Should().Be(mockUser.FamilyName);
