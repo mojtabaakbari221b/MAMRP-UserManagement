@@ -1,4 +1,10 @@
-﻿namespace UserManagement.Application.ApplicationServices.ServiceGroups.Queries.GetAll;
+﻿using UserManagement.Domain.Filterings;
+using UserManagement.Domain.Orderings;
 
-public record GetAllServiceGroupQueryRequest(int PageNumber, int PageSize, SectionType Type)
-    : IRequest<IEnumerable<SectionGroupDto>>;
+namespace UserManagement.Application.ApplicationServices.ServiceGroups.Queries.GetAll;
+
+public record GetAllServiceGroupQueryRequest(
+    PaginationFilter Pagination,
+    ServiceGroupFiltring? Filtring,
+    ServiceGroupOrdering? Ordering)
+    : IRequest<PaginationResult<IEnumerable<SectionGroupDto>>>;

@@ -9,7 +9,7 @@ public sealed class GetServiceGroupByIdQueryHandler(IUnitOfWork uow)
         CancellationToken token)
     {
         var response = await _uow.SectionGroups.GetById(request.Id, SectionType.Service, token)
-                       ?? throw new SectionGroupNotFoundException();
+                       ?? throw new ServiceGroupNotFoundException();
 
         return response.Adapt<SectionGroupDto>();
     }

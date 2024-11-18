@@ -9,7 +9,7 @@ public sealed class UpdateServiceGroupCommandHandler(IUnitOfWork uow)
     public async Task Handle(UpdateServiceGroupCommandRequest request, CancellationToken token)
     {
         var sectionGroup = await _uow.SectionGroups.FindAsync(request.Id, SectionType.Service, token)
-                           ?? throw new SectionGroupNotFoundException();
+                           ?? throw new ServiceGroupNotFoundException();
 
         sectionGroup.Name = request.Name;
         

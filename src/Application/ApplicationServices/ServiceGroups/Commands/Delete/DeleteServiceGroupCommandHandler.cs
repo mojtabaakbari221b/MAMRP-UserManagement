@@ -9,7 +9,7 @@ public sealed class DeleteServiceGroupCommandHandler(IUnitOfWork uow)
     public async Task Handle(DeleteServiceGroupCommandRequest request, CancellationToken token)
     {
         var sectionGroup = await _uow.SectionGroups.FindAsync(request.Id, SectionType.Service,token)
-                           ?? throw new SectionGroupNotFoundException();
+                           ?? throw new ServiceGroupNotFoundException();
 
         _uow.SectionGroups.Delete(sectionGroup);
         await _uow.SaveChangesAsync(token);

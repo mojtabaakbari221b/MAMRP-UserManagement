@@ -1,16 +1,21 @@
 ﻿namespace UserManagement.Application.ApplicationServices.ServiceGroups.Queries.GetAll;
 
 public sealed class GetAllServiceGroupQueryHandler(IUnitOfWork uow)
-    : IRequestHandler<GetAllServiceGroupQueryRequest, IEnumerable<SectionGroupDto>>
+    : IRequestHandler<GetAllServiceGroupQueryRequest, PaginationResult<IEnumerable<SectionGroupDto>>>
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public async Task<IEnumerable<SectionGroupDto>> Handle(GetAllServiceGroupQueryRequest request,
+    public async Task<PaginationResult<IEnumerable<SectionGroupDto>>> Handle(GetAllServiceGroupQueryRequest request,
         CancellationToken token)
     {
-        var responses = await _uow.SectionGroups
-            .ToList(request.PageNumber, request.PageSize, request.Type, token);
+        var results = await _uow.SectionGroups
+            .GetAll(request.Pagination, request.Filtring, request.Ordering, SectionType.Service, token);
 
-        return responses.Adapt<IEnumerable<SectionGroupDto>>();
-    }
+        return new PaginationResult<IEnumerable<SectionGroupDto>>
+        (
+            data: results.Responses.Adapt<IEnumerable<SectionGroupDto>>(),
+            pageNumber: request.Pagination.PageNumber,
+            pageSize: request.Pagination.PageSize,
+            totalRecords: results.Count
+        );    }
 }
