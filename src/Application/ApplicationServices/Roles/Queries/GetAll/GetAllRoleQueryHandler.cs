@@ -1,18 +1,22 @@
 ﻿namespace UserManagement.Application.ApplicationServices.Roles.Queries.GetAll;
 
 public sealed class GetAllRoleQueryHandler(IUnitOfWork uow)
-    : IRequestHandler<GetAllRoleQueryReqeust, GetRoleQueryResponse>
+    : IRequestHandler<GetAllRoleQueryRequest, PaginationResult<IEnumerable<GetRoleQueryResponse>>>
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public async Task<GetRoleQueryResponse> Handle(GetAllRoleQueryReqeust request, CancellationToken cancellationToken)
+    public async Task<PaginationResult<IEnumerable<GetRoleQueryResponse>>> Handle(GetAllRoleQueryRequest request,
+        CancellationToken token)
     {
-        var response = await _uow.Roles.GetRoleById(request.Id.ToString());
-        if (response is null)
-        {
-            throw new RoleNotFoundException();
-        }
+        var results = await _uow.Roles
+            .GetAll(request.Pagination, request.Filtering, request.Ordering, token);
 
-        return response.Adapt<GetRoleQueryResponse>();
+        return new PaginationResult<IEnumerable<GetRoleQueryResponse>>
+        (
+            data: results.Responses.Adapt<IEnumerable<GetRoleQueryResponse>>(),
+            pageNumber: request.Pagination.PageNumber,
+            pageSize: request.Pagination.PageSize,
+            totalRecords: results.Count
+        );
     }
 }

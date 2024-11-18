@@ -1,6 +1,4 @@
-﻿using UserManagement.Application.ApplicationServices.Roles.Exceptions;
-
-namespace UserManagement.Application.ApplicationServices.Roles.Commands.Add;
+﻿namespace UserManagement.Application.ApplicationServices.Roles.Commands.Add;
 
 public sealed class AddRoleCommandHandler(IUnitOfWork uow)
     : IRequestHandler<AddRoleCommandRequest, AddRoleCommandResponse>
