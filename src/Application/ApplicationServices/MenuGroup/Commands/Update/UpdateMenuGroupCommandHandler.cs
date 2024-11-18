@@ -9,7 +9,7 @@ public sealed class UpdateMenuGroupCommandHandler(IUnitOfWork uow)
     public async Task Handle(UpdateMenuGroupCommandRequest request, CancellationToken token)
     {
         var sectionGroup = await _uow.SectionGroups.FindAsync(request.Id, SectionType.Menu, token)
-                           ?? throw new SectionGroupNotFoundException();
+                           ?? throw new ServiceGroupNotFoundException();
 
         sectionGroup.Name = request.Name;
         

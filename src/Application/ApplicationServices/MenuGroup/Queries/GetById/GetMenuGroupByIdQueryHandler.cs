@@ -8,7 +8,7 @@ public sealed class GetMenuGroupByIdQueryHandler(IUnitOfWork uow)
     public async Task<SectionGroupDto> Handle(GetMenuGroupByIdQueryRequest request, CancellationToken token)
     {
         var response = await _uow.SectionGroups.GetById(request.Id, SectionType.Menu, token)
-                       ?? throw new SectionGroupNotFoundException();
+                       ?? throw new ServiceGroupNotFoundException();
         
         return response.Adapt<SectionGroupDto>();
     }
