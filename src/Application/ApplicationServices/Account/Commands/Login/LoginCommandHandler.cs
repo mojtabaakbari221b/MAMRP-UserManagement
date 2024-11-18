@@ -14,7 +14,7 @@ public sealed class LoginCommandHandler(IUnitOfWork uow, ITokenFactory tokenFact
             throw new LoginFailedException();
         }
 
-        var tokens = await _tokenFactory.CreateTokenAsync(result.Data.UserId);
+        var tokens = await _tokenFactory.CreateTokenAsync(result.Data!.UserId);
         await _uow.Users.SaveToken(tokens.Adapt<TokenDto>());
         return tokens.Adapt<LoginCommandResponse>();
     }

@@ -1,6 +1,7 @@
 ﻿namespace UserManagement.Application.ApplicationServices.Account.Commands.Update;
 
-public sealed class UpdateUserCommandHandler(IUnitOfWork uow) : IRequestHandler<UpdateUserCommandRequest>
+public sealed class UpdateUserCommandHandler(IUnitOfWork uow) 
+    : IRequestHandler<UpdateUserCommandRequest>
 {
     private readonly IUnitOfWork _uow = uow;
 

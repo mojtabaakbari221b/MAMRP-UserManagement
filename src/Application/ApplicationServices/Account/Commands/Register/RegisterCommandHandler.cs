@@ -9,6 +9,10 @@ public sealed class RegisterCommandHandler(IUnitOfWork uow)
     public async Task Handle(RegisterCommandRequest request, CancellationToken token)
     {
         var model = request.Adapt<RegisterDto>();
-        await _uow.Users.Register(model);
+        var result = await _uow.Users.Register(model);
+        if (!result.IsSuccess)
+        {
+            throw new UserNotRegisteredException(result.Errors);
+        }
     }
 }
